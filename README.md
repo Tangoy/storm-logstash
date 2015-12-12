@@ -17,8 +17,7 @@ To use this:
     - storm.reporter: "ganglia"
     - storm.ganglia.host: "localhost"
     - storm.ganglia.port: 8649
-    - storm.ganglia.period: 2
 
 Future work:
-- Support to send metrics to Logstash
+- Support to send metrics to ElasticSearch/Logstash/Kibana
 - Support to send metrics to Graphite

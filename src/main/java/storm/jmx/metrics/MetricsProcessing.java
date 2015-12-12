@@ -69,6 +69,7 @@ public class MetricsProcessing {
 					+ taskInfo.srcTaskId
 					+ "." + name).replaceAll("_", "")
 					.replaceAll(":", "")
+					.replaceAll("default", "")
 					.toString();
 			
 			return str;
