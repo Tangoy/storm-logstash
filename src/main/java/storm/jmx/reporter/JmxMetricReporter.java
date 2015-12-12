@@ -9,11 +9,13 @@ import java.util.concurrent.TimeUnit;
 import javax.management.MBeanServer;
 
 import com.codahale.metrics.JmxReporter;
+import com.codahale.metrics.MetricRegistry;
 
 import storm.jmx.metrics.GaugeMetric;
 import storm.jmx.metrics.MetricReporter;
 
 public class JmxMetricReporter extends MetricReporter{
+	protected final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 	private final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 	private final String DOMAIN_NAME = "domainname";
 	private JmxReporter reporter;
@@ -25,13 +27,11 @@ public class JmxMetricReporter extends MetricReporter{
 		processConfig();
 	}
 	
-	public void processConfig()
+	private void processConfig()
 	{
 		domainName = config.containsKey(DOMAIN_NAME)?
 				config.get(DOMAIN_NAME).toString() :
 				"storm.jmx.metrics";
-		
-		
 	}
 	public void registeringMetrics(String name, Double value) throws Exception
 	{

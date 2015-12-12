@@ -1,6 +1,7 @@
 package storm.jmx.metrics.consumer;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,8 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	private final String STORM_REPORTER = "storm.reporter";
 	public void cleanup() {
 		// TODO Auto-generated method stub
-		reporter.stop();
+		if(reporter != null)
+			reporter.stop();
 	}
 	
 	public void handleDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) {
@@ -42,31 +44,40 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
 		}
-		
+	}
+	private MetricReporter createInstance(Map config)
+	{
+		try{
+			String className = config.containsKey(STORM_REPORTER)?
+					config.get(STORM_REPORTER).toString() :
+						"storm.jmx.reporter.JmxMetricReporter";
+	
+			Class reporterClass = Class.forName(className);
+			Constructor<?> constructor = reporterClass.getConstructor(Map.class);
+			return (MetricReporter)constructor.newInstance(config);
+		}
+		catch(Exception se)
+		{
+			LOG.error(se.getMessage());
+			return null;
+		}
 	}
 	public void prepare(Map config, Object arguments, TopologyContext context, IErrorReporter iErrorReporter) {
 		// TODO Auto-generated method stub
 		try {
-			Map<Object, Object> mapConfig = Maps.newHashMap();
-			mapConfig.putAll(config);
-			if(arguments != null && arguments instanceof Map)
-		    {
-				Map<Object, Object> map = (Map<Object, Object>) arguments;
-				mapConfig.putAll(map);
-			}
-			
-			String strReport =  config.get(STORM_REPORTER).toString();
-			if(strReport.compareToIgnoreCase("jmx") == 0)
-			{
-				reporter = new JmxMetricReporter(config);
-			}
-			else if(strReport.compareToIgnoreCase("ganglia") == 0)
-				reporter = new GangliaMetricReporter(config);
-			//reporter = new GangliaMetricReporter(config);
-			processing = new MetricsProcessing();
-			
-		
-				reporter.start();
+				Map<Object, Object> mapConfig = Maps.newHashMap();
+				mapConfig.putAll(config);
+				if(arguments != null && arguments instanceof Map)
+			    {
+					mapConfig.putAll((Map) arguments);
+				}
+						
+				reporter = createInstance(mapConfig);
+				if(reporter != null){
+					processing = new MetricsProcessing();
+					
+					reporter.start();
+				}
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block

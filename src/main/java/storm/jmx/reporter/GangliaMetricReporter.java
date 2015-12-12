@@ -26,7 +26,7 @@ public class GangliaMetricReporter extends MetricReporter{
 		super(config);
 		processConfig();
 	}
-	public void processConfig()
+	private void processConfig()
 	{
 		gangliaHost = config.containsKey(GANGLIA_HOST) ? 
 				config.get(GANGLIA_HOST).toString() :
@@ -54,7 +54,6 @@ public class GangliaMetricReporter extends MetricReporter{
 	}
 	public void start() throws IOException
 	{	
-		
 		/*if(ganglia!=null){
 			reporter = GangliaReporter.forRegistry(METRIC_REGISTRY)
 												.convertDurationsTo(TimeUnit.SECONDS)
