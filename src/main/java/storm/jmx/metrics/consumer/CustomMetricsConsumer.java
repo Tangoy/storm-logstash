@@ -45,7 +45,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	}
 	public void prepare(Map config, Object object, TopologyContext context, IErrorReporter iErrorReporter) {
 		// TODO Auto-generated method stub
-		String reporterConfig = (config.containsKey("REPORTER")) ? config.get("REPORTER").toString() : "JmxReporter";
+		String reporterConfig = (config.containsKey("reporter")) ? config.get("reporter").toString() : "JmxReporter";
 		if(reporterConfig.equals("JmxReporter"))
 		{
 			reporter = new JmxMetricReporter(config);

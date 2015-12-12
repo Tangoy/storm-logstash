@@ -14,7 +14,7 @@ import storm.jmx.metrics.MetricReporter;
 
 public class JmxMetricReporter extends MetricReporter{
 	private final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-	private final String DOMAIN_NAME = "DOMAIN_NAME";
+	private final String DOMAIN_NAME = "domainname";
 	
 	private final Map config;
 	
