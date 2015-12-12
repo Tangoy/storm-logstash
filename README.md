@@ -11,10 +11,13 @@ To use this:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
 - To report to JmxReporter just put parameter in storm.yaml or config in topology
     argument:
-    - reperter: JmxReporter
+    - storm.reporter: "jmx"
     - domainname: storm.jmx.metrics
 - To report to Ganglia just put parameter in storm.yaml or config in topology
-    - reporter: GangliaReporter
+    - storm.reporter: "ganglia"
+    - storm.ganglia.host: "localhost"
+    - storm.ganglia.port: 8649
+    - storm.ganglia.period: 2
 
 Future work:
 - Support to send metrics to Logstash
