@@ -6,7 +6,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 
 To use this:
 - Setup on local mode (I just test on this)
-- Add lines on storm.yaml file: 
+- Add lines on storm.yaml file:
     topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
 - To report to JmxReporter just put parameter in storm.yaml or config in topology
