@@ -9,11 +9,13 @@ To use this:
 - Add lines on storm.yaml file: 
     topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
-- OTo report to JmxReporter just put parameter in storm.yaml or config in topology
-    - REPORTER: JmxReporter
+- To report to JmxReporter just put parameter in storm.yaml or config in topology
+    argument:
+    - reperter: JmxReporter
+    - domainname: storm.jmx.metrics
 - To report to Ganglia just put parameter in storm.yaml or config in topology
-    - REPORTER: GangliaReporter
+    - reporter: GangliaReporter
 
 Future work:
-- Support to send metrics to logstash
+- Support to send metrics to Logstash
 - Support to send metrics to Graphite
