@@ -6,16 +6,19 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 
 To use this:
 - Setup on local mode (I just test on this)
-- Add lines on storm.yaml file:
+- Add lines on conf/storm.yaml file:
+
     topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
-- To report to JmxReporter just put parameter in $STORM_HOME/conf/storm.yaml or config in topology
+- To report to Jmx just put parameter in $STORM_HOME/conf/storm.yaml or config in topology:
+
     argument:
-    - storm.reporter: "storm.jmx.repoter.JmxMetricRepoter"
+    - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
     - domainname: storm.jmx.metrics
-- To report to Ganglia just put parameter in $STORM_HOME/conf/storm.yaml or config in topology
+- To report to Ganglia just put parameter in $STORM_HOME/conf/storm.yaml or config in topology:
+
 	argument:
-    - storm.reporter: "storm.jmx.repoter.GangliaMetricRepoter"
+    - storm.reporter: "storm.jmx.reporter.GangliaMetricRepoter"
     - storm.ganglia.host: "localhost"
     - storm.ganglia.port: 8649
 
