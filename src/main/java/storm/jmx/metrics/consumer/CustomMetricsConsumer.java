@@ -46,30 +46,29 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	}
 	public void prepare(Map config, Object arguments, TopologyContext context, IErrorReporter iErrorReporter) {
 		// TODO Auto-generated method stub
-		//if(arguments != null)
-		//	config.putAll((Map) arguments);
-		Map<Object, Object> mapConfig = Maps.newHashMap();
-		mapConfig.putAll(config);
-		if(arguments != null && arguments instanceof Map)
-	    {
-			Map<Object, Object> map = (Map<Object, Object>) arguments;
-			mapConfig.putAll(map);
-		}
-		
-		String strReport =  config.get(STORM_REPORTER).toString();
-		
-		if(strReport.compareToIgnoreCase("jmx") == 0)
-		{
-			reporter = new JmxMetricReporter(config);
-		}
-		else if(strReport.compareToIgnoreCase("ganglia") == 0)
-			reporter = new GangliaMetricReporter(config);
-		//reporter = new GangliaMetricReporter(config);
-		processing = new MetricsProcessing();
-		
 		try {
-			reporter.start();
-		} catch (IOException e) {
+			Map<Object, Object> mapConfig = Maps.newHashMap();
+			mapConfig.putAll(config);
+			if(arguments != null && arguments instanceof Map)
+		    {
+				Map<Object, Object> map = (Map<Object, Object>) arguments;
+				mapConfig.putAll(map);
+			}
+			
+			String strReport =  config.get(STORM_REPORTER).toString();
+			if(strReport.compareToIgnoreCase("jmx") == 0)
+			{
+				reporter = new JmxMetricReporter(config);
+			}
+			else if(strReport.compareToIgnoreCase("ganglia") == 0)
+				reporter = new GangliaMetricReporter(config);
+			//reporter = new GangliaMetricReporter(config);
+			processing = new MetricsProcessing();
+			
+		
+				reporter.start();
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
 		}

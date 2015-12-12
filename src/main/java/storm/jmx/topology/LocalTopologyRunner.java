@@ -20,7 +20,7 @@ public class LocalTopologyRunner {
 		config.put("storm.reporter", "ganglia");
 		config.put("storm.ganglia.host", "localhost");
 		config.put("storm.ganglia.port", 8649);
-		config.put("DOMAIN_NAME", "stom.metrics");
+		config.put("domainname", "stom.metrics");
 		try {
 			StormSubmitter.submitTopology("Storm-Metrics-Example", config, 
 					builder.createTopology());

@@ -25,13 +25,27 @@ public class JmxMetricReporter extends MetricReporter{
 		processConfig();
 	}
 	
-	private void processConfig()
+	public void processConfig()
 	{
 		domainName = config.containsKey(DOMAIN_NAME)?
 				config.get(DOMAIN_NAME).toString() :
 				"storm.jmx.metrics";
 		
 		
+	}
+	public void registeringMetrics(String name, Double value) throws Exception
+	{
+		if(!METRIC_REGISTRY.getGauges().containsKey(name))
+		{
+			GaugeMetric<Double> gauge = new GaugeMetric<Double>();
+			gauge.setValue(value);
+			METRIC_REGISTRY.register(name, gauge);
+		}
+		else
+		{
+			GaugeMetric<Double> gauge = (GaugeMetric<Double>)METRIC_REGISTRY.getGauges().get(name);
+			gauge.setValue(value);
+		}
 	}
 	public void start() throws IOException
 	{
