@@ -9,12 +9,13 @@ To use this:
 - Add lines on storm.yaml file:
     topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
-- To report to JmxReporter just put parameter in storm.yaml or config in topology
+- To report to JmxReporter just put parameter in $STORM_HOME/conf/storm.yaml or config in topology
     argument:
-    - storm.reporter: "jmx"
+    - storm.reporter: "storm.jmx.repoter.JmxMetricRepoter"
     - domainname: storm.jmx.metrics
-- To report to Ganglia just put parameter in storm.yaml or config in topology
-    - storm.reporter: "ganglia"
+- To report to Ganglia just put parameter in $STORM_HOME/conf/storm.yaml or config in topology
+	argument:
+    - storm.reporter: "storm.jmx.repoter.GangliaMetricRepoter"
     - storm.ganglia.host: "localhost"
     - storm.ganglia.port: 8649
 
