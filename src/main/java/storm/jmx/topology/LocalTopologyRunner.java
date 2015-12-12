@@ -17,7 +17,8 @@ public class LocalTopologyRunner {
 		
 		Config config = new Config();
 		config.setDebug(true);
-		
+		config.put("REPORTER", "GangliaReporter");
+		config.put("DOMAIN_NAME", "stom.metrics");
 		try {
 			StormSubmitter.submitTopology("Storm-Metrics-Example", config, 
 					builder.createTopology());
