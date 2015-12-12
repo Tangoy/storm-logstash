@@ -2,7 +2,7 @@ package storm.jmx.metrics.consumer;
 
 import java.io.IOException;
 import java.util.Collection;
-
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.storm.guava.collect.Maps;
@@ -22,9 +22,10 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	public static final Logger LOG = LoggerFactory.getLogger(CustomMetricsConsumer.class);
 	private MetricReporter reporter;
 	private MetricsProcessing processing;
+	private final String STORM_REPORTER = "storm.reporter";
 	public void cleanup() {
 		// TODO Auto-generated method stub
-		
+		reporter.stop();
 	}
 	
 	public void handleDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) {
@@ -43,16 +44,27 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 		}
 		
 	}
-	public void prepare(Map config, Object object, TopologyContext context, IErrorReporter iErrorReporter) {
+	public void prepare(Map config, Object arguments, TopologyContext context, IErrorReporter iErrorReporter) {
 		// TODO Auto-generated method stub
-		String reporterConfig = (config.containsKey("reporter")) ? config.get("reporter").toString() : "JmxReporter";
-		if(reporterConfig.equals("JmxReporter"))
+		//if(arguments != null)
+		//	config.putAll((Map) arguments);
+		Map<Object, Object> mapConfig = Maps.newHashMap();
+		mapConfig.putAll(config);
+		if(arguments != null && arguments instanceof Map)
+	    {
+			Map<Object, Object> map = (Map<Object, Object>) arguments;
+			mapConfig.putAll(map);
+		}
+		
+		String strReport =  config.get(STORM_REPORTER).toString();
+		
+		if(strReport.compareToIgnoreCase("jmx") == 0)
 		{
 			reporter = new JmxMetricReporter(config);
 		}
-		else
-			reporter = new GangliaMetricReporter();
-		
+		else if(strReport.compareToIgnoreCase("ganglia") == 0)
+			reporter = new GangliaMetricReporter(config);
+		//reporter = new GangliaMetricReporter(config);
 		processing = new MetricsProcessing();
 		
 		try {
@@ -61,6 +73,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
 		}
+		
 	}
 	
 	
