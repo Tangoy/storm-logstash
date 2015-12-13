@@ -15,7 +15,7 @@ To use this:
 
     argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
-    - domainname: storm.jmx.metrics
+    - domainname: "storm.jmx.metrics"
 - To report to Ganglia, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology:
 
 	argument:
@@ -28,7 +28,7 @@ To use this:
 	- storm.reporter: "storm.jmx.reporter.GraphiteRepoter"
 	- storm.graphite.host: "localhost"
 	- storm.graphite.port: 2003
-	- storm.graphite.protocol: UDP
+	- storm.graphite.protocol: "UDP"
 
 Future work:
 - Support to send metrics to ElasticSearch/Logstash/Kibana
