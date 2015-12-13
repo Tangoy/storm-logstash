@@ -29,5 +29,6 @@ To use this:
 	- storm.graphite.host: "localhost"
 	- storm.graphite.port: 2003
 	- storm.graphite.protocol: UDP
+
 Future work:
 - Support to send metrics to ElasticSearch/Logstash/Kibana
