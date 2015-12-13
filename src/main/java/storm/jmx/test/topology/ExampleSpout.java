@@ -1,4 +1,4 @@
-package storm.jmx.topology;
+package storm.jmx.test.topology;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,11 @@
 storm/jmx/metrics/GaugeMetric.class
 storm/jmx/metrics/MetricFiller.class
+storm/jmx/test/topology/ExampleBolt.class
 storm/jmx/reporter/GangliaMetricReporter.class
-storm/jmx/reporter/JmxMetricReporter.class
+storm/jmx/test/topology/LocalTopologyRunner.class
+storm/jmx/metrics/MetricsProcessing.class
+storm/jmx/test/topology/ExampleSpout.class
+storm/jmx/reporter/GraphiteMetricReporter.class
 storm/jmx/metrics/MetricReporter.class
 storm/jmx/metrics/consumer/CustomMetricsConsumer.class
-storm/jmx/metrics/MetricsProcessing.class
+storm/jmx/reporter/JmxMetricReporter.class

@@ -1,4 +1,4 @@
-package storm.jmx.topology;
+package storm.jmx.test.topology;
 
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
