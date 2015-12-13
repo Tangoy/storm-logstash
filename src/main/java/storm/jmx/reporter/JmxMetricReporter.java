@@ -21,32 +21,11 @@ public class JmxMetricReporter extends MetricReporter{
 	private JmxReporter reporter;
 	
 	private String domainName;
-	public JmxMetricReporter(Map config)
-	{
+	public JmxMetricReporter(Map config){
 		super(config);
-		processConfig();
+		this.processConfig();
 	}
 	
-	private void processConfig()
-	{
-		domainName = config.containsKey(DOMAIN_NAME)?
-				config.get(DOMAIN_NAME).toString() :
-				"storm.jmx.metrics";
-	}
-	public void registeringMetrics(String name, Double value) throws Exception
-	{
-		if(!METRIC_REGISTRY.getGauges().containsKey(name))
-		{
-			GaugeMetric<Double> gauge = new GaugeMetric<Double>();
-			gauge.setValue(value);
-			METRIC_REGISTRY.register(name, gauge);
-		}
-		else
-		{
-			GaugeMetric<Double> gauge = (GaugeMetric<Double>)METRIC_REGISTRY.getGauges().get(name);
-			gauge.setValue(value);
-		}
-	}
 	public void start() throws IOException
 	{
 		reporter = JmxReporter.forRegistry(METRIC_REGISTRY)
@@ -60,5 +39,29 @@ public class JmxMetricReporter extends MetricReporter{
 	{
 		if(reporter != null)
 			reporter.stop();
+	}
+
+	@Override
+	protected void processConfig() {
+		// TODO Auto-generated method stub
+		domainName = config.containsKey(DOMAIN_NAME)?
+				config.get(DOMAIN_NAME).toString() :
+				"storm.jmx.metrics";
+	}
+
+	@Override
+	public void sendMetrics(String name, Double value) throws Exception {
+		// TODO Auto-generated method stub
+		if(!METRIC_REGISTRY.getGauges().containsKey(name))
+		{
+			GaugeMetric<Double> gauge = new GaugeMetric<Double>();
+			gauge.setValue(value);
+			METRIC_REGISTRY.register(name, gauge);
+		}
+		else
+		{
+			GaugeMetric<Double> gauge = (GaugeMetric<Double>)METRIC_REGISTRY.getGauges().get(name);
+			gauge.setValue(value);
+		}
 	}
 }

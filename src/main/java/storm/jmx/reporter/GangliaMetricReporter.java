@@ -24,9 +24,9 @@ public class GangliaMetricReporter extends MetricReporter{
 	public GangliaMetricReporter(Map config)
 	{
 		super(config);
-		processConfig();
+		this.processConfig();
 	}
-	private void processConfig()
+	protected void processConfig()
 	{
 		gangliaHost = config.containsKey(GANGLIA_HOST) ? 
 				config.get(GANGLIA_HOST).toString() :
@@ -48,7 +48,7 @@ public class GangliaMetricReporter extends MetricReporter{
 			LOG.error("Can not create GMetric for Ganglia. " + e.getStackTrace());
 		}
 	}
-	public void registeringMetrics(String name, Double value) throws Exception
+	public void sendMetrics(String name, Double value) throws Exception
 	{
 		this.announceDouble(name, value, gangliaGroup);
 	}

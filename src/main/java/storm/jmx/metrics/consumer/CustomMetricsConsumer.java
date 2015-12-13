@@ -27,7 +27,12 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	public void cleanup() {
 		// TODO Auto-generated method stub
 		if(reporter != null)
-			reporter.stop();
+			try {
+				reporter.stop();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.getMessage());
+			}
 	}
 	
 	public void handleDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) {
@@ -38,7 +43,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 			if(maps.size() > 0)
 			{
 				for(Map.Entry<String, Double> entry : maps.entrySet())
-					reporter.registeringMetrics(entry.getKey(), entry.getValue());
+					reporter.sendMetrics(entry.getKey(), entry.getValue());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -73,6 +78,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 				}
 						
 				reporter = createInstance(mapConfig);
+				
 				if(reporter != null){
 					processing = new MetricsProcessing();
 					
@@ -82,6 +88,10 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
+		}
+		catch(Exception se)
+		{
+			LOG.error(se.getMessage());
 		}
 		
 	}
