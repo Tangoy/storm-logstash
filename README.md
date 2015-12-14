@@ -16,7 +16,7 @@ To use this:
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
-    - domainname: "storm.metrics"
+    - storm.domain.name: "storm.metrics"
 ```
 - To report to Ganglia, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology
 ```
