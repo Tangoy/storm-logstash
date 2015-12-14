@@ -33,4 +33,5 @@ To use this:
    - Create pipeline: see in resource folder
    - Create json file to query remote object: see in resource folder
    *NOTE: in object_name, storm.metrics is your domain name when configuring in storm.yaml
-   - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
+
+- To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
