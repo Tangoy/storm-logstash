@@ -64,6 +64,16 @@ output{
 }
   ```
  
-   *NOTE: in object_name, storm.metrics is your domain name when configuring in storm.yaml
+*NOTE: 
+   - In object_name field of json file, storm.metrics is your domain name when configuring in storm.yaml
+   - Make sure that you enable jmx in your storm. Add those lines in storm.yaml
+   ```
+   Worker:
+ worker.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1%ID%  -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
 
+   Supervisor
+supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
+   Nimbus
+ nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
+   ```
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
