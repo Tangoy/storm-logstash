@@ -1,15 +1,15 @@
 package storm.jmx.reporter;
 
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.management.MBeanServer;
 
+import com.codahale.metrics.DefaultObjectNameFactory;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.ObjectNameFactory;
 
 import storm.jmx.metrics.GaugeMetric;
 import storm.jmx.metrics.MetricReporter;
@@ -17,7 +17,7 @@ import storm.jmx.metrics.MetricReporter;
 public class JmxMetricReporter extends MetricReporter{
 	protected final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 	private final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-	private final String DOMAIN_NAME = "domainname";
+	private final String DOMAIN_NAME = "storm.domain.name";
 	private JmxReporter reporter;
 	
 	private String domainName;
@@ -26,13 +26,16 @@ public class JmxMetricReporter extends MetricReporter{
 		this.processConfig();
 	}
 	
-	public void start() throws IOException
+	public void start() throws Exception
 	{
+		ObjectNameFactory objectname = new DefaultObjectNameFactory();
+		objectname.createName("type",domainName,"Gauge");
 		reporter = JmxReporter.forRegistry(METRIC_REGISTRY)
 					.registerWith(mBeanServer)
 					.inDomain(domainName)
-					.convertDurationsTo(TimeUnit.MILLISECONDS)
-					.convertRatesTo(TimeUnit.SECONDS).build();
+					.createsObjectNamesWith(objectname)
+					.build();
+		
 		reporter.start();
 	}
 	public void stop()
@@ -48,14 +51,17 @@ public class JmxMetricReporter extends MetricReporter{
 				config.get(DOMAIN_NAME).toString() :
 				"storm.jmx.metrics";
 	}
-
+	
 	@Override
 	public void sendMetrics(String name, Double value) throws Exception {
 		// TODO Auto-generated method stub
+		
 		if(!METRIC_REGISTRY.getGauges().containsKey(name))
 		{
 			GaugeMetric<Double> gauge = new GaugeMetric<Double>();
+			
 			gauge.setValue(value);
+			
 			METRIC_REGISTRY.register(name, gauge);
 		}
 		else

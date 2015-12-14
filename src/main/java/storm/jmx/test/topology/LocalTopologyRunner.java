@@ -18,10 +18,10 @@ public class LocalTopologyRunner {
 		//config.setDebug(true);
 		/*config.put("storm.reporter", "storm.jmx.reporter.GangliaMetricReporter");
 		config.put("storm.ganglia.host", "localhost");
-		config.put("storm.ganglia.port", 8649);
+		config.put("storm.ganglia.port", 8649);*/
 		
 		config.put("storm.reporter", "storm.jmx.reporter.JmxMetricReporter");
-		config.put("domainname", "stom.metrics");*/
+		config.put("storm.domain.name", "storm.metrics.Gauge");
 		StormSubmitter.submitTopology("Storm-Metrics-Example", config, 
 					builder.createTopology());
 		//Utils.sleep(10000);

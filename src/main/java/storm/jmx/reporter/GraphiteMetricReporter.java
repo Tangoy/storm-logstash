@@ -58,6 +58,6 @@ public class GraphiteMetricReporter extends MetricReporter {
 					2003;
 		graphiteProtocol = config.containsKey(GRAPHITE_PROTOCOL) ?
 				config.get(GRAPHITE_PROTOCOL).toString():
-				"TCP";
+				"UDP";
 	}
 }
