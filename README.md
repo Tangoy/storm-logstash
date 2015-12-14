@@ -30,8 +30,6 @@ To use this:
 - To send metrics to Logstash by Jmx.
 	
    - First, install Jmx Plugin in Logstash
-   - Create pipeline: see in resource folder
-   - Create json file to query remote object:
   ```
  input{
    jmx{
@@ -47,6 +45,20 @@ output{
    stdout{codec=>rubbydebug}
 }
  ```
+   - Create pipeline: see in resource folder
+   - Create json file to query remote object:
+  ```
+  {
+  "host" : "localhost"
+  "port" : "16703"
+  "querries" :[
+    {
+      "object_name" : "storm.metrics.Gauge:name=*",
+      "attributes" : ["Value"]
+    } ]
+}
+  ```
+ 
    *NOTE: in object_name, storm.metrics is your domain name when configuring in storm.yaml
 
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
