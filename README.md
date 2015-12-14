@@ -31,7 +31,7 @@ To use this:
 	
    - First, install Jmx Plugin in Logstash
    - Create pipeline:
-   
+   <p>
    input{
 	jmx{
 	path=>"path-to-json-file"
@@ -45,7 +45,7 @@ To use this:
    hosts=>["localhost:9200"]}
    stdout{codec=>rubbydebug}
 }
-	
+<p>
    - Create json file to query remote object:
 		{
 		  "host" : "localhost"
