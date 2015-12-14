@@ -31,7 +31,22 @@ To use this:
 	
    - First, install Jmx Plugin in Logstash
    - Create pipeline: see in resource folder
-   - Create json file to query remote object: see in resource folder
+   - Create json file to query remote object:
+  '''
+ input{
+   jmx{
+       path=>"path-to-json-file"
+       polling_frequency=>15
+       type=>"jmx"
+       nb_thread=>1
+   }
+}
+
+output{
+   elasticsearch{ hosts=>["localhost:9200"]}
+   stdout{codec=>rubbydebug}
+}
+ '''
    *NOTE: in object_name, storm.metrics is your domain name when configuring in storm.yaml
 
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
