@@ -33,17 +33,18 @@ To use this:
    - Create pipeline:
    
    input{
-		   jmx{
-		       path=>"path-to-json-file"
-		       polling_frequency=>15
-		       type=>"jmx"
-		       nb_thread=>1
-		  }
-			}
-			output{
-			   elasticsearch{ hosts=>["localhost:9200"]}
-			   stdout{codec=>rubbydebug}
-		}
+	jmx{
+	path=>"path-to-json-file"
+	polling_frequency=>15
+	type=>"jmx"
+	nb_thread=>1
+	}
+   }
+  output{
+   elasticsearch{ 
+   hosts=>["localhost:9200"]}
+   stdout{codec=>rubbydebug}
+}
 	
    - Create json file to query remote object:
 		{
