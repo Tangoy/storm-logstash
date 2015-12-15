@@ -1,6 +1,6 @@
 # storm-jmx-metrics
 
-An project is to get all storm built-in metrics and send to Logstash-forwarder with Jmx, Ganglia or Graphite logstash-input. 
+An project is to get all storm built-in metrics and send to logstash-forwarder with Jmx, Ganglia or Graphite logstash-input. 
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite)
 
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
@@ -9,20 +9,20 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - Setup on local mode (I just test on this)
 
 ###Enable Metrics Consumer
-- Add lines in $STORM_HOME/conf/storm.yaml file:
+- Add lines in *$STORM_HOME/conf/storm.yaml* file:
 ```
   topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
   ```
 ### JMX reporter
-- To report to Jmx, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology:
+- To report to Jmx, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
     - storm.domain.name: "storm.metrics"
 ```
 ### Ganglia reporter
-- To report to Ganglia, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology
+- To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
 ```
    argument:
     - storm.reporter: "storm.jmx.reporter.GangliaMetricRepoter"
@@ -30,7 +30,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
     - storm.ganglia.port: 8649
 ```
 ### Graphite reporter
-- To report to Graphite (not tested yet), put parameters in $STORM_HOME/conf/storm.yaml or Config in topology:
+- To report to Graphite (not tested yet), put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
  argument:
 	- storm.reporter: "storm.jmx.reporter.GraphiteRepoter"
@@ -39,9 +39,9 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 	- storm.graphite.protocol: "UDP"
 ```	
 ### Logstash Configuration
-- And finally, to send metrics to Logstash with Jmx input.
-   - First, install Jmx Plugin in Logstash
-   - Create pipeline:
+- And finally, to send metrics to Logstash with *Jmx input*.
+   - First, install **logstash-input-jmx** in Logstash
+   - Create pipeline: Example
   ```
  input{
    jmx{
@@ -84,6 +84,7 @@ supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -
    ```
 
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
+  Example
 ```
  input{
    ganlia{
