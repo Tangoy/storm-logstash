@@ -1,23 +1,26 @@
 # storm-jmx-metrics
 
-An project is to get all storm built-in metrics and send to Logstash-forwarder by Jmx, Ganglia or Graphite. 
+An project is to get all storm built-in metrics and send to Logstash-forwarder with Jmx, Ganglia or Graphite logstash-input. 
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite)
 
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
 
-To use this:
+##Usage
 - Setup on local mode (I just test on this)
+###Enable Metrics Consumer
 - Add lines in $STORM_HOME/conf/storm.yaml file:
 ```
   topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
   ```
+### JMX reporter
 - To report to Jmx, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology:
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
     - storm.domain.name: "storm.metrics"
 ```
+### Ganglia reporter
 - To report to Ganglia, just put parameters in $STORM_HOME/conf/storm.yaml or Config in topology
 ```
    argument:
@@ -25,6 +28,7 @@ To use this:
     - storm.ganglia.host: "localhost"
     - storm.ganglia.port: 8649
 ```
+### Graphite reporter
 - To report to Graphite (not tested yet), put parameters in $STORM_HOME/conf/storm.yaml or Config in topology:
 ```
  argument:
@@ -33,7 +37,8 @@ To use this:
 	- storm.graphite.port: 2003
 	- storm.graphite.protocol: "UDP"
 ```	
-- And finally, To send metrics to Logstash with Jmx input.
+### Logstash Configuration
+- And finally, to send metrics to Logstash with Jmx input.
    - First, install Jmx Plugin in Logstash
    - Create pipeline:
   ```
@@ -58,7 +63,7 @@ output{
   "port" : "16703"
   "querries" :[
     {
-      "object_name" : "storm.metrics.Gauge:name=*",
+      "object_name" : "storm.metrics:name=*",
       "attributes" : ["Value"]
     } ]
 }
@@ -70,10 +75,27 @@ output{
    ```
    Worker:
  worker.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1%ID%  -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
-
    Supervisor
 supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
    Nimbus
  nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
    ```
+
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
+```
+ input{
+   ganlia{
+       host=>"localhost"
+       port=>8649
+   }
+   graphite{
+   	   host=>"localhost"
+   	   port=>2003
+   }
+}
+
+output{
+   elasticsearch{ hosts=>["localhost:9200"]}
+   stdout{codec=>rubbydebug}
+}
+ ```
