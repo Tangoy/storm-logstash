@@ -19,7 +19,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
-    - storm.domain.name: "storm.metrics"
+    - storm.domainname: "storm.metrics"
 ```
 ### Ganglia reporter
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
