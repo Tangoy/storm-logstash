@@ -12,7 +12,7 @@ public class LocalTopologyRunner {
 		// TODO Auto-generated method stub
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("name-spout", new ExampleSpout(),1);
-		builder.setBolt("name-bolt", new ExampleBolt(),2).shuffleGrouping("name-spout");
+		builder.setBolt("name-bolt", new ExampleBolt(),1).shuffleGrouping("name-spout");
 		
 		Config config = new Config();
 		//config.setDebug(true);
@@ -21,7 +21,7 @@ public class LocalTopologyRunner {
 		config.put("storm.ganglia.port", 8649);*/
 		
 		config.put("storm.reporter", "storm.jmx.reporter.JmxMetricReporter");
-		config.put("storm.domain.name", "storm.metrics.Gauge");
+		config.put("storm.domainname", "storm.metrics");
 		StormSubmitter.submitTopology("Storm-Metrics-Example", config, 
 					builder.createTopology());
 		//Utils.sleep(10000);

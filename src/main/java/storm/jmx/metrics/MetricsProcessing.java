@@ -14,9 +14,11 @@ import backtype.storm.metric.api.IMetricsConsumer.TaskInfo;
 public class MetricsProcessing {
 	public static final Logger LOG = LoggerFactory.getLogger(MetricsProcessing.class);
 	
-	public MetricsProcessing()
+	private String stormId;
+	
+	public MetricsProcessing(String stormId)
 	{
-		
+		this.stormId = stormId;
 	}
 	public Map<String,Double> processDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) throws Exception
 	{
@@ -33,7 +35,7 @@ public class MetricsProcessing {
 					Map<String, Object> map = (Map<String, Object>) p.value;
 					for(Map.Entry<String, Object> entry : map.entrySet())
 					{
-						Double value = Double.valueOf(entry.getValue().toString());   
+						Double value = Double.valueOf(entry.getValue().toString());
 						if(value != null)
 						{
 							StringBuffer name = new StringBuffer(p.name).append(".")
@@ -64,12 +66,12 @@ public class MetricsProcessing {
 	{
 		if(name != null)
 		{
-			String str = (taskInfo.srcComponentId + "." 
+			String str = (stormId + "." +
+					taskInfo.srcComponentId + "." 
 					+ taskInfo.srcWorkerHost + "." 
-					+ taskInfo.srcTaskId
-					+ "." + name).replaceAll("_", "")
+				    + name).replaceAll("_", "")
 					.replaceAll(":", "")
-					.replaceAll("default", "")
+					.replaceAll(".default", "")
 					.toString();
 			
 			return str;

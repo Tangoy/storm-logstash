@@ -17,7 +17,7 @@ import storm.jmx.metrics.MetricReporter;
 public class JmxMetricReporter extends MetricReporter{
 	protected final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 	private final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-	private final String DOMAIN_NAME = "storm.domain.name";
+	private final String DOMAIN_NAME = "storm.domainname";
 	private JmxReporter reporter;
 	
 	private String domainName;
@@ -29,7 +29,7 @@ public class JmxMetricReporter extends MetricReporter{
 	public void start() throws Exception
 	{
 		ObjectNameFactory objectname = new DefaultObjectNameFactory();
-		objectname.createName("type",domainName,"Gauge");
+		objectname.createName("type",domainName,"gauge");
 		reporter = JmxReporter.forRegistry(METRIC_REGISTRY)
 					.registerWith(mBeanServer)
 					.inDomain(domainName)
@@ -44,7 +44,6 @@ public class JmxMetricReporter extends MetricReporter{
 			reporter.stop();
 	}
 
-	@Override
 	protected void processConfig() {
 		// TODO Auto-generated method stub
 		domainName = config.containsKey(DOMAIN_NAME)?
@@ -52,7 +51,6 @@ public class JmxMetricReporter extends MetricReporter{
 				"storm.jmx.metrics";
 	}
 	
-	@Override
 	public void sendMetrics(String name, Double value) throws Exception {
 		// TODO Auto-generated method stub
 		

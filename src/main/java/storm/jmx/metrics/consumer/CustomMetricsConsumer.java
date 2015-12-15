@@ -3,7 +3,6 @@ package storm.jmx.metrics.consumer;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.storm.guava.collect.Maps;
@@ -15,15 +14,15 @@ import backtype.storm.task.IErrorReporter;
 import backtype.storm.task.TopologyContext;
 import storm.jmx.metrics.MetricReporter;
 import storm.jmx.metrics.MetricsProcessing;
-import storm.jmx.reporter.GangliaMetricReporter;
-import storm.jmx.reporter.JmxMetricReporter;
-
 
 public class CustomMetricsConsumer implements IMetricsConsumer {
 	public static final Logger LOG = LoggerFactory.getLogger(CustomMetricsConsumer.class);
 	private MetricReporter reporter;
 	private MetricsProcessing processing;
 	private final String STORM_REPORTER = "storm.reporter";
+	
+	private String stormId;
+	
 	public void cleanup() {
 		// TODO Auto-generated method stub
 		if(reporter != null)
@@ -37,17 +36,19 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	
 	public void handleDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) {
 		// TODO Auto-generated method stub
-		Map<String, Double> maps = Maps.newHashMap();
-		try {
-			maps = processing.processDataPoints(taskInfo, dataPoints);
-			if(maps.size() > 0)
-			{
-				for(Map.Entry<String, Double> entry : maps.entrySet())
-					reporter.sendMetrics(entry.getKey(), entry.getValue());
+		if(!taskInfo.srcComponentId.equalsIgnoreCase("__acker") && !taskInfo.srcComponentId.equalsIgnoreCase("__system")){
+			Map<String, Double> maps = Maps.newHashMap();
+			try {
+				maps = processing.processDataPoints(taskInfo, dataPoints);
+				if(maps.size() > 0)
+				{
+					for(Map.Entry<String, Double> entry : maps.entrySet())
+						reporter.sendMetrics(entry.getKey(), entry.getValue());
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.getMessage());
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LOG.error(e.getMessage());
 		}
 	}
 	private MetricReporter createInstance(Map config)
@@ -67,9 +68,15 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 			return null;
 		}
 	}
+	private String cleanStormId(String topologyName)
+	{
+		return topologyName.substring(0, topologyName.substring(0,topologyName.lastIndexOf("-")).lastIndexOf("-"));
+	}
 	public void prepare(Map config, Object arguments, TopologyContext context, IErrorReporter iErrorReporter) {
 		// TODO Auto-generated method stub
 		try {
+				stormId = cleanStormId(context.getStormId());
+				
 				Map<Object, Object> mapConfig = Maps.newHashMap();
 				mapConfig.putAll(config);
 				if(arguments != null && arguments instanceof Map)
@@ -80,7 +87,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 				reporter = createInstance(mapConfig);
 				
 				if(reporter != null){
-					processing = new MetricsProcessing();
+					processing = new MetricsProcessing(stormId);
 					
 					reporter.start();
 				}
