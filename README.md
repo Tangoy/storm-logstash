@@ -7,6 +7,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 
 ##Usage
 - Setup on local mode (I just test on this)
+
 ###Enable Metrics Consumer
 - Add lines in $STORM_HOME/conf/storm.yaml file:
 ```
@@ -72,6 +73,7 @@ output{
 *NOTE: 
    - In object_name field of json file, storm.metrics is your domain name when configuring in storm.yaml
    - Make sure that you enable jmx in your storm. Add those lines in storm.yaml
+   
    ```
    Worker:
  worker.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1%ID%  -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
