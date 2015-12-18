@@ -1,9 +1,12 @@
 # storm-jmx-metrics
 
-An project is to get all storm built-in metrics and send to logstash-forwarder with Jmx, Ganglia or Graphite logstash-input. 
+An project is to get all built-in storm metrics and send directly to logstash-forwarder with ####Jmx, Ganglia, Graphite, TCP and UDP logstash-input####.
+
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite)
 
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
+
+Although my purpose is to use logstash-input-plugin, the program still works well with Ganglia and Graphite monitoring system.
 
 ##Usage
 - Setup on local mode (I just test on this)
@@ -19,28 +22,32 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
+<<<<<<< Upstream, based on branch 'master' of https://github.com/doandongnguyen/storm-jmx-metrics
     - storm.domainname: "storm.metrics"
+=======
+    - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
+>>>>>>> a8f803b Improve code and add TCP/UDP protocol
 ```
 ### Ganglia reporter
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
 ```
    argument:
     - storm.reporter: "storm.jmx.reporter.GangliaMetricRepoter"
-    - storm.ganglia.host: "localhost"
-    - storm.ganglia.port: 8649
+    - storm.ganglia.host: "HOST_IP"
+    - storm.ganglia.port: PORT 		//*default = 8649*
+    - storm.ganglia.group: "GANGLIA_GROUP"
 ```
 ### Graphite reporter
-- To report to Graphite (not tested yet), put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
+- To report to Graphite, put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
  argument:
 	- storm.reporter: "storm.jmx.reporter.GraphiteRepoter"
-	- storm.graphite.host: "localhost"
-	- storm.graphite.port: 2003
-	- storm.graphite.protocol: "UDP"
+	- storm.graphite.host: "HOST_IP"
+	- storm.graphite.port: PORT		//*default = 2003*
 ```	
 ### Logstash Configuration
-- And finally, to send metrics to Logstash with *Jmx input*.
-   - First, install **logstash-input-jmx** in Logstash
+- Send metrics to Logstash with *Jmx input*.
+   - First, install **logstash-input-jmx** in Logstash-fowarder
    - Create pipeline: Example
   ```
  input{
@@ -54,10 +61,10 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 
 output{
    elasticsearch{ hosts=>["localhost:9200"]}
-   stdout{codec=>rubbydebug}
+   stdout{codec=>rubydebug}
 }
  ```
-   - Create json file to query remote object:
+   - Json file to query remote object:
   ```
   {
   "host" : "localhost"
@@ -71,8 +78,8 @@ output{
   ```
  
 *NOTE: 
-   - In object_name field of json file, storm.metrics is your domain name when configuring in storm.yaml
-   - Make sure that you enable jmx in your storm. Add those lines in storm.yaml
+   - In *object_name* field of json file, *storm.metrics* is your domain name when configuring in *storm.yaml*
+   - Make sure that you **enable jmx** in your storm. Add those lines in *storm.yaml*
    
    ```
    Worker:
@@ -102,3 +109,22 @@ output{
    stdout{codec=>rubbydebug}
 }
  ```
+- Pipeline in logstash if using UDP or TCP:
+```
+	input{
+	 tcp{
+	  host=>"localhost"
+	  port=>14445
+	  mode=>"server"
+	  ssl_verify=>false
+	 }
+	 udp{
+ 	 host=>"localhost"
+      port=>14446
+     }
+   }
+	output{
+	 stdout{codec=>rubydebug}
+	}
+```
+
