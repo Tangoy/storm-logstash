@@ -1,4 +1,4 @@
-# storm-jmx-metrics
+# storm-logstash-metrics
 
 An project is to get all built-in metrics of storm and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
 Although my purpose is to use logstash-input-plugin, the program still works well with Ganglia and Graphite monitoring system.
