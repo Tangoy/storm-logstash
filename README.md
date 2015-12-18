@@ -1,12 +1,10 @@
 # storm-jmx-metrics
 
-An project is to get all built-in storm metrics and send directly to logstash-forwarder with ####Jmx, Ganglia, Graphite, TCP and UDP logstash-input####.
+An project is to get all built-in storm metrics and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
+Although my purpose is to use logstash-input-plugin, the program still works well with Ganglia and Graphite monitoring system.
 
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite)
-
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
-
-Although my purpose is to use logstash-input-plugin, the program still works well with Ganglia and Graphite monitoring system.
 
 ##Usage
 - Setup on local mode (I just test on this)
@@ -22,11 +20,8 @@ Although my purpose is to use logstash-input-plugin, the program still works wel
 ```  
    argument:
     - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
-<<<<<<< Upstream, based on branch 'master' of https://github.com/doandongnguyen/storm-jmx-metrics
     - storm.domainname: "storm.metrics"
-=======
     - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
->>>>>>> a8f803b Improve code and add TCP/UDP protocol
 ```
 ### Ganglia reporter
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
@@ -34,7 +29,7 @@ Although my purpose is to use logstash-input-plugin, the program still works wel
    argument:
     - storm.reporter: "storm.jmx.reporter.GangliaMetricRepoter"
     - storm.ganglia.host: "HOST_IP"
-    - storm.ganglia.port: PORT 		//*default = 8649*
+    - storm.ganglia.port: PORT 		//default = 8649
     - storm.ganglia.group: "GANGLIA_GROUP"
 ```
 ### Graphite reporter
@@ -43,7 +38,7 @@ Although my purpose is to use logstash-input-plugin, the program still works wel
  argument:
 	- storm.reporter: "storm.jmx.reporter.GraphiteRepoter"
 	- storm.graphite.host: "HOST_IP"
-	- storm.graphite.port: PORT		//*default = 2003*
+	- storm.graphite.port: PORT		//default = 2003
 ```	
 ### Logstash Configuration
 - Send metrics to Logstash with *Jmx input*.
