@@ -1,9 +1,9 @@
 # storm-jmx-metrics
 
-An project is to get all built-in storm metrics and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
+An project is to get all built-in metrics of storm and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
 Although my purpose is to use logstash-input-plugin, the program still works well with Ganglia and Graphite monitoring system.
 
-The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite)
+The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite).
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
 
 ##Usage
