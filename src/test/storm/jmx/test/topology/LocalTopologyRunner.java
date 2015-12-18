@@ -15,16 +15,9 @@ public class LocalTopologyRunner {
 		builder.setBolt("name-bolt", new ExampleBolt(),1).shuffleGrouping("name-spout");
 		
 		Config config = new Config();
-		//config.setDebug(true);
-		/*config.put("storm.reporter", "storm.jmx.reporter.GangliaMetricReporter");
-		config.put("storm.ganglia.host", "localhost");
-		config.put("storm.ganglia.port", 8649);*/
-		
-		config.put("storm.reporter", "storm.jmx.reporter.JmxMetricReporter");
-		config.put("storm.domainname", "storm.metrics");
+				
 		StormSubmitter.submitTopology("Storm-Metrics-Example", config, 
 					builder.createTopology());
-		//Utils.sleep(10000);
 		
 	}
 

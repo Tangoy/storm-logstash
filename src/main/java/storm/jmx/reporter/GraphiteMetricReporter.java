@@ -1,51 +1,72 @@
 package storm.jmx.reporter;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codahale.metrics.graphite.Graphite;
-import com.codahale.metrics.graphite.GraphiteSender;
-import com.codahale.metrics.graphite.GraphiteUDP;
 
-import storm.jmx.metrics.MetricReporter;
+import storm.jmx.metrics.AbstractMetricReporter;
 
-public class GraphiteMetricReporter extends MetricReporter {
-	
-	private final String GRAPHITE_HOST = "storm.graphite.host";
-	private final String GRAPHITE_PORT = "storm.graphite.port";
-	private final String GRAPHITE_PROTOCOL = "storm.graphite.protocol";
+
+public class GraphiteMetricReporter extends AbstractMetricReporter {
+	public static final Logger LOG = LoggerFactory.getLogger(GraphiteMetricReporter.class);
 	
 	private String graphiteHost;
 	private int graphitePort;
-	private String graphiteProtocol;
 	
 	private InetSocketAddress inetSocketAddress;
-	private GraphiteSender graphite;
+
+	private Graphite graphite;
+	
+	public GraphiteMetricReporter()
+	{}
 	public GraphiteMetricReporter(Map config) {
-		super(config);
+		
 		// TODO Auto-generated constructor stub
-		this.processConfig();
+		this.setConfig(config);
 	}	
-	public void sendMetrics(String name, Double value) throws Exception
+	public void sendMetrics(String name, Double value)
 	{
-		if(!graphite.isConnected())
-			graphite.connect();
-		graphite.send(name, String.format("%8.2f", value), System.currentTimeMillis());
-		graphite.flush();
+		try {
+			if(!graphite.isConnected())
+				graphite.connect();
+			graphite.send(name, String.format("%8.2f", value), System.currentTimeMillis());
+			graphite.flush();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}
 	}
-	public void start() throws Exception
+	public void start()
 	{
+		try {
 			inetSocketAddress = new InetSocketAddress(graphiteHost, graphitePort);
-			if(graphiteProtocol.equalsIgnoreCase("UDP"))
-				graphite = new GraphiteUDP(inetSocketAddress);
-			else
-				graphite = new Graphite(inetSocketAddress);
+			graphite = new Graphite(inetSocketAddress);
 			graphite.connect();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}
 	}
-	public void stop() throws Exception
+	public void stop()
 	{
 		if(graphite.isConnected())
-			graphite.close();
+			try {
+				graphite.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				LOG.error(e.getMessage());
+			}
 	}
 	@Override
 	protected void processConfig() {
@@ -56,8 +77,11 @@ public class GraphiteMetricReporter extends MetricReporter {
 		graphitePort = config.containsKey(GRAPHITE_PORT) ?
 				Integer.valueOf(config.get(GRAPHITE_PORT).toString()) :
 					2003;
-		graphiteProtocol = config.containsKey(GRAPHITE_PROTOCOL) ?
-				config.get(GRAPHITE_PROTOCOL).toString():
-				"UDP";
+	}
+	@Override
+	public void setConfig(Map config) {
+		// TODO Auto-generated method stub
+		this.config = config;
+		this.processConfig();
 	}
 }

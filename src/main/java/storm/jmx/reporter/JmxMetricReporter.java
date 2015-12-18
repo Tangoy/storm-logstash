@@ -11,22 +11,25 @@ import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ObjectNameFactory;
 
+import storm.jmx.metrics.AbstractMetricReporter;
 import storm.jmx.metrics.GaugeMetric;
-import storm.jmx.metrics.MetricReporter;
 
-public class JmxMetricReporter extends MetricReporter{
-	protected final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
+public class JmxMetricReporter extends AbstractMetricReporter{
+	private final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 	private final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-	private final String DOMAIN_NAME = "storm.domainname";
-	private JmxReporter reporter;
 	
+	
+	private JmxReporter reporter;
 	private String domainName;
+	
+	public JmxMetricReporter(){}
+	
 	public JmxMetricReporter(Map config){
-		super(config);
-		this.processConfig();
+		this.setConfig(config);
+		
 	}
 	
-	public void start() throws Exception
+	public void start()
 	{
 		ObjectNameFactory objectname = new DefaultObjectNameFactory();
 		objectname.createName("type",domainName,"gauge");
@@ -51,7 +54,7 @@ public class JmxMetricReporter extends MetricReporter{
 				"storm.jmx.metrics";
 	}
 	
-	public void sendMetrics(String name, Double value) throws Exception {
+	public void sendMetrics(String name, Double value){
 		// TODO Auto-generated method stub
 		
 		if(!METRIC_REGISTRY.getGauges().containsKey(name))
@@ -67,5 +70,12 @@ public class JmxMetricReporter extends MetricReporter{
 			GaugeMetric<Double> gauge = (GaugeMetric<Double>)METRIC_REGISTRY.getGauges().get(name);
 			gauge.setValue(value);
 		}
+	}
+
+	@Override
+	public void setConfig(Map config) {
+		// TODO Auto-generated method stub
+		this.config = config;
+		this.processConfig();
 	}
 }

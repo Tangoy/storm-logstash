@@ -11,7 +11,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-public class ExampleSpout extends BaseRichSpout {
+public class ExampleSpout extends BaseRichSpout{
 
 	/**
 	 * 

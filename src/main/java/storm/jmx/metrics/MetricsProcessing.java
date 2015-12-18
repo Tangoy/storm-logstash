@@ -14,13 +14,7 @@ import backtype.storm.metric.api.IMetricsConsumer.TaskInfo;
 public class MetricsProcessing {
 	public static final Logger LOG = LoggerFactory.getLogger(MetricsProcessing.class);
 	
-	private String stormId;
-	
-	public MetricsProcessing(String stormId)
-	{
-		this.stormId = stormId;
-	}
-	public Map<String,Double> processDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) throws Exception
+	public static Map<String,Double> processDataPoints(String stormId, TaskInfo taskInfo, Collection<DataPoint> dataPoints)
 	{
 		Map<String, Double> maps = new HashMap<String, Double>();
 		for(DataPoint p : dataPoints)
@@ -40,12 +34,12 @@ public class MetricsProcessing {
 						{
 							StringBuffer name = new StringBuffer(p.name).append(".")
 									.append(entry.getKey().toString());
-							maps.put(this.processingMetricPrefix(name.toString(), taskInfo), value);
+							maps.put(processingMetricPrefix(stormId, name.toString(), taskInfo), value);
 						}
 					}
-				}catch(Exception se)
+				}catch(Exception e)
 				{
-					LOG.error(se.getMessage() + "\n" + se.getStackTrace());
+					LOG.error(e.getMessage());
 				}
 			}
 			else if(p.value instanceof Number)
@@ -57,12 +51,12 @@ public class MetricsProcessing {
 				}catch(Exception se){
 					LOG.error(se.getMessage() + "\n" + se.getStackTrace());
 				}
-				maps.put(processingMetricPrefix(p.name, taskInfo), value);
+				maps.put(processingMetricPrefix(stormId, p.name, taskInfo), value);
 			}
 		}
 		return maps;
 	}
-	private String processingMetricPrefix(String name, TaskInfo taskInfo)
+	private static String processingMetricPrefix(String stormId, String name, TaskInfo taskInfo)
 	{
 		if(name != null)
 		{

@@ -4,37 +4,36 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ganglia.GangliaReporter;
 
 import info.ganglia.gmetric4j.gmetric.GMetric;
 import info.ganglia.gmetric4j.gmetric.GMetricType;
+import info.ganglia.gmetric4j.gmetric.GangliaException;
 import info.ganglia.gmetric4j.gmetric.GMetric.UDPAddressingMode;
 import info.ganglia.gmetric4j.gmetric.GMetricSlope;
+import storm.jmx.metrics.AbstractMetricReporter;
 import storm.jmx.metrics.GaugeMetric;
-import storm.jmx.metrics.MetricReporter;
 
-public class GangliaMetricReporter extends MetricReporter{
-	
+public class GangliaMetricReporter extends AbstractMetricReporter{
+	public static final Logger LOG = LoggerFactory.getLogger(GangliaMetricReporter.class);
 	protected final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
 	
-	private final String GANGLIA_HOST = "storm.ganglia.host";
-	private final String GANGLIA_PORT = "storm.ganglia.port";
-	private final String GANGLIA_REPORT_PERIOD = "storm.ganglia.period";
-	private final String GANGLIA_GROUP = "storm.ganglia.group";
-	
-	private GangliaReporter reporter;
 	private GMetric ganglia;
 	private String gangliaHost;
 	private int gangliaPort;
 	private String gangliaGroup = "StormMetrics";
-	private long gangliaPeriod;
 	
+	public GangliaMetricReporter()
+	{}
 	public GangliaMetricReporter(Map config)
 	{
-		super(config);
-		this.processConfig();
+		this.setConfig(config);
 	}
+	
 	protected void processConfig()
 	{
 		gangliaHost = config.containsKey(GANGLIA_HOST) ? 
@@ -46,47 +45,21 @@ public class GangliaMetricReporter extends MetricReporter{
 		gangliaGroup = config.containsKey(GANGLIA_GROUP) ?
 				config.get(GANGLIA_GROUP).toString() :
 					"StormMetrics";
-		gangliaPeriod = config.containsKey(GANGLIA_REPORT_PERIOD) ?
-					Long.valueOf(config.get(GANGLIA_REPORT_PERIOD).toString()) :
-							2;
+		
+	}
+	public void sendMetrics(String name, Double value)
+	{
+		if(ganglia != null)
+			this.announceDouble(name, value, gangliaGroup);
+	}
+	public void start()
+	{	
 		try {
 			ganglia = new GMetric(gangliaHost, gangliaPort, UDPAddressingMode.MULTICAST,1,true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			ganglia = null;
-			LOG.error("Can not create GMetric for Ganglia. " + e.getStackTrace());
-		}
-	}
-	public void sendMetrics(String name, Double value) throws Exception
-	{
-		if(!METRIC_REGISTRY.getGauges().containsKey(name))
-		{
-			GaugeMetric<Double> gauge = new GaugeMetric<Double>();
-			gauge.setValue(value);
-			METRIC_REGISTRY.register(name, gauge);
-		}
-		else
-		{
-			GaugeMetric<Double> gauge = (GaugeMetric<Double>)METRIC_REGISTRY.getGauges().get(name);
-			gauge.setValue(value);
-		}
-		
-		//this.announceDouble(name, value, gangliaGroup);
-		/*if(name.contains("latency"))
-			this.announceString(name, String.format("%2.2f", value), "ms", 60, 0, gangliaGroup);
-		else
-			this.announceString(name, String.format("%2.2f", value), "tuples", 10000, 10000, gangliaGroup);*/
-	}
-	public void start() throws IOException
-	{	
-		if(ganglia!=null){
-			reporter = GangliaReporter.forRegistry(METRIC_REGISTRY)
-												.convertDurationsTo(TimeUnit.SECONDS)
-												.convertRatesTo(TimeUnit.MILLISECONDS)
-												//.withDMax(10000)
-												//.withTMax(10000)
-												.build(ganglia);
-			reporter.start(gangliaPeriod, TimeUnit.SECONDS);
+			LOG.error(e.getMessage());
 		}
 	}
 	public void stop()
@@ -99,24 +72,54 @@ public class GangliaMetricReporter extends MetricReporter{
 				LOG.error(e.getMessage());
 			}
 	}
-	public void announceDouble(String name, Double value, String gangliaGroup) throws Exception
+	public void announceDouble(String name, Double value, String gangliaGroup)
 	{
-		ganglia.announce(name, value, gangliaGroup);			
+		try {
+			ganglia.announce(name, value, gangliaGroup);
+		} catch (GangliaException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}			
 	}
-	public void announceLong(String name, Long value, String gangliaGroup) throws Exception
+	public void announceLong(String name, Long value, String gangliaGroup)
 	{
-		ganglia.announce(name, value, gangliaGroup);
+		try {
+			ganglia.announce(name, value, gangliaGroup);
+		} catch (GangliaException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}
 	}
-	public void announceString(String name, String value,String units, int tmax, int dmax, String gangliaGroup) throws Exception
+	public void announceString(String name, String value,String units, int tmax, int dmax, String gangliaGroup)
 	{
-		ganglia.announce(name, value, GMetricType.STRING, units, GMetricSlope.BOTH, tmax, dmax, gangliaGroup);
+		try {
+			ganglia.announce(name, value, GMetricType.STRING, units, GMetricSlope.BOTH, tmax, dmax, gangliaGroup);
+		} catch (GangliaException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}
 	}
-	public void announceFloat(String name, Float value, String gangliaGroup) throws Exception
+	public void announceFloat(String name, Float value, String gangliaGroup)
 	{
-		ganglia.announce(name, value, gangliaGroup);
+		try{
+			ganglia.announce(name, value, gangliaGroup);
+		}
+		catch(GangliaException e){
+			LOG.error(e.getMessage());
+		}
 	}
-	public void announceInt(String name, Integer value, String gangliaGroup) throws Exception
+	public void announceInt(String name, Integer value, String gangliaGroup)
 	{
-		ganglia.announce(name, value, gangliaGroup);
+		try {
+			ganglia.announce(name, value, gangliaGroup);
+		} catch (GangliaException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
+		}
+	}
+	public void setConfig(Map config) {
+		// TODO Auto-generated method stub
+		this.config = config;
+		this.processConfig();
 	}
 }
