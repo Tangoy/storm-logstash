@@ -19,15 +19,14 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - To report to Jmx, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```  
    argument:
-    - storm.reporter: "storm.jmx.reporter.JmxMetricRepoter"
-    - storm.domainname: "storm.metrics"
+    - storm.reporter: "storm.jmx.reporter.JmxMetricReporter"
     - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
 ```
 ### Ganglia reporter
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
 ```
    argument:
-    - storm.reporter: "storm.jmx.reporter.GangliaMetricRepoter"
+    - storm.reporter: "storm.jmx.reporter.GangliaMetricReporter"
     - storm.ganglia.host: "HOST_IP"
     - storm.ganglia.port: PORT 		//default = 8649
     - storm.ganglia.group: "GANGLIA_GROUP"
@@ -36,7 +35,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - To report to Graphite, put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
  argument:
-	- storm.reporter: "storm.jmx.reporter.GraphiteRepoter"
+	- storm.reporter: "storm.jmx.reporter.GraphiteReporter"
 	- storm.graphite.host: "HOST_IP"
 	- storm.graphite.port: PORT		//default = 2003
 ```	
@@ -55,15 +54,15 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 }
 
 output{
-   elasticsearch{ hosts=>["localhost:9200"]}
+   elasticsearch{ hosts=>["HOST:PORT"]}
    stdout{codec=>rubydebug}
 }
  ```
    - Json file to query remote object:
   ```
   {
-  "host" : "localhost"
-  "port" : "16703"
+  "host" : "JVM_HOST"
+  "port" : "JVM_PORT"
   "querries" :[
     {
       "object_name" : "storm.metrics:name=*",
@@ -90,17 +89,17 @@ supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -
 ```
  input{
    ganlia{
-       host=>"localhost"
-       port=>8649
+       host=>"HOST"
+       port=>PORT	//default 8649
    }
    graphite{
-   	   host=>"localhost"
-   	   port=>2003
+   	   host=>"HOST"
+   	   port=>PORT	//default 2003
    }
 }
 
 output{
-   elasticsearch{ hosts=>["localhost:9200"]}
+   elasticsearch{ hosts=>["HOST:PORT"]}
    stdout{codec=>rubbydebug}
 }
  ```
@@ -108,14 +107,14 @@ output{
 ```
 	input{
 	 tcp{
-	  host=>"localhost"
-	  port=>14445
+	  host=>"IP_SERVER"
+	  port=>PORT		//default: 14445
 	  mode=>"server"
 	  ssl_verify=>false
 	 }
 	 udp{
- 	 host=>"localhost"
-      port=>14446
+ 	 host=>"HOST"
+      port=> PORT		//default: 14446
      }
    }
 	output{
