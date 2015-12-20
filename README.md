@@ -1,7 +1,7 @@
 # storm-logstash-metrics
 
 An project is to get all built-in metrics of storm and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
-Although my purpose is to in logstash with input-plugins, the program still works well with Ganglia and Graphite monitoring system and Jmx.
+Although my purpose is for logstash with input-plugins, the program still works well with Ganglia and Graphite monitoring system and Jmx.
 
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite).
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
@@ -100,7 +100,7 @@ supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -
 
 output{
    elasticsearch{ hosts=>["HOST:PORT"]}
-   stdout{codec=>rubbydebug}
+   stdout{codec=>rubydebug}
 }
  ```
 - Pipeline in logstash if using UDP or TCP:
