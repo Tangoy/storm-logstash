@@ -15,6 +15,11 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
   topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
   ```
+  Or when defining topology, add this line:
+  ```
+  	Config conf = new Config();
+  	conf.registrerMetricsConsumer(CustomMetricsConsumer.class);
+  ```
 ### JMX reporter
 - To report to Jmx, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```  
@@ -22,6 +27,11 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
     - storm.reporter: "storm.jmx.reporter.JmxMetricReporter"
     - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
 ```
+```
+	conf.add("storm.reporter","storm.jmx.reporter.JmxMetricReporter");
+	conf.add("storm.jmx.domain", "MBEAN_DOMAIN_NAME");
+```
+
 ### Ganglia reporter
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
 ```
@@ -31,6 +41,13 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
     - storm.ganglia.port: PORT 		//default = 8649
     - storm.ganglia.group: "GANGLIA_GROUP"
 ```
+```
+	conf.add("storm.reporter","storm.jmx.reporter.GangliaMetricReporter");
+	conf.add("storm.ganglia.host", "HOST_IP");
+	conf.add("storm.ganglia.port", PORT);
+	conf.add("storm.ganglia.group", "GANGLIA_GROUP");
+```
+
 ### Graphite reporter
 - To report to Graphite, put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
@@ -39,6 +56,37 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 	- storm.graphite.host: "HOST_IP"
 	- storm.graphite.port: PORT		//default = 2003
 ```	
+```
+	conf.add("storm.reporter","storm.jmx.reporter.GraphiteReporter");
+	conf.add("storm.graphite.host", "HOST_IP");
+	conf.add("storm.graphite.port", PORT);
+```
+
+### TCP/UDP configuration 
+ - With TCP/UDP reporter
+ ```
+ argument for UDP reporter:
+	- storm.reporter: "storm.jmx.reporter.UDPMetricReporter"
+	- storm.udp.host: "HOST_IP"
+	- storm.udp.port: PORT		//default = 1446
+```	
+```
+	conf.add("storm.reporter","storm.jmx.reporter.UDPMetricReporter");
+	conf.add("storm.udp.ipaddress", "HOST_IP");
+	conf.add("storm.udp.port", PORT);
+```
+```
+argument for TCP reporter:
+	- storm.reporter: "storm.jmx.reporter.TCPMetricReporter"
+	- storm.tcp.host: "HOST_IP"
+	- storm.tcp.port: PORT		//default = 1445
+```
+ ```
+	conf.add("storm.reporter","storm.jmx.reporter.TCPMetricReporter");
+	conf.add("storm.tcp.ipaddress", "HOST_IP");
+	conf.add("storm.tcp.port", PORT);
+```
+
 ### Logstash Configuration
 - Send metrics to Logstash with *Jmx input*.
    - First, install **logstash-input-jmx** in Logstash-fowarder
@@ -70,7 +118,7 @@ output{
     } ]
 }
   ```
- 
+
 *NOTE: 
    - In *object_name* field of json file, *storm.metrics* is your domain name when configuring in *storm.yaml*
    - Make sure that you **enable jmx** in your storm. Add those lines in *storm.yaml*

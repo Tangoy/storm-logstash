@@ -1,7 +1,0 @@
-storm/jmx/metrics/GaugeMetric.class
-storm/jmx/metrics/MetricFiller.class
-storm/jmx/reporter/GangliaMetricReporter.class
-storm/jmx/metrics/MetricsProcessing.class
-storm/jmx/reporter/GraphiteMetricReporter.class
-storm/jmx/metrics/consumer/CustomMetricsConsumer.class
-storm/jmx/reporter/JmxMetricReporter.class

@@ -88,9 +88,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 		    {
 				mapConfig.putAll((Map) arguments);
 			}
-			String className = config.containsKey(STORM_REPORTER)?
-					config.get(STORM_REPORTER).toString() :
-						"storm.jmx.reporter.JmxMetricReporter";
+			
 			reporter = createInstance(config);
 			
 			reporter.start();
