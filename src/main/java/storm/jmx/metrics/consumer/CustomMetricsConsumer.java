@@ -89,7 +89,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 				mapConfig.putAll((Map) arguments);
 			}
 			
-			reporter = createInstance(config);
+			reporter = createInstance(mapConfig);
 			
 			reporter.start();
 		}
