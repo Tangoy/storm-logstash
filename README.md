@@ -90,7 +90,7 @@ argument for TCP reporter:
 
 ### Logstash Configuration
 - Send metrics to Logstash with *Jmx input*.
-   - First, install **logstash-input-jmx** in Logstash-fowarder
+   - First, install **logstash-input-jmx** in logstash
    - Create pipeline: Example
   ```
  input{
