@@ -1,11 +1,11 @@
 storm.zookeeper.servers:
     - "localhost"
+nimbus.host: "localhost"
 topology.builtin.metrics.bucket.size.secs: 10
 topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
       parallelism.hint: 1
       argument:
-         - nimbus.host: "localhost"
          - storm.reporter: "storm.jmx.reporter.TCPMetricReporter"
          - storm.tcp.ipaddress: "localhost"
          - storm.tcp.port: 14445
