@@ -1,0 +1,17 @@
+storm.zookeeper.servers:
+    - "localhost"
+topology.builtin.metrics.bucket.size.secs: 10
+topology.metrics.consumer.register:
+    - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
+      parallelism.hint: 1
+      argument:
+nimbus.host: "localhost"
+storm.reporter: "storm.jmx.reporter.TCPMetricReporter"
+storm.tcp.ipaddress: "localhost"
+storm.tcp.port: 14445
+
+nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=12345 -Djava.rmi.server.hostname=localhost"
+
+worker.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1%ID%  -Djava.rmi.server.hostname=localhost"
+
+supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=12346 -Djava.rmi.server.hostname=localhost"
