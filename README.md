@@ -173,8 +173,11 @@ output{
 	}
 ```
 * Structure of metric name: {NODE}.{TOPOLOGY}.{COMPONENT}.{METRIC.EXTRA_INFORMATION}
+
   for example:
+  
   			localstorm.Local-Storm-Example.spout-example.transfer-count.metrics
+  			
   			localstorm.Local-Storm-Example.bolt-example.emit-count.spout-example
 * Filter for logstash if using UDP/TCP reporter
   
