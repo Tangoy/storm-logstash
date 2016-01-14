@@ -1,6 +1,6 @@
 # storm-logstash-metrics
 
-An project is to get all built-in metrics of storm and send directly to logstash-forwarder with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
+An project is to get all built-in metrics of storm and send directly to logstash with Jmx, Ganglia, Graphite, TCP and UDP logstash-input.
 Although my purpose is for logstash with input-plugins, the program still works well with Ganglia and Graphite monitoring system and Jmx.
 
 The idea came up with an open source project named storm-graphite (https://github.com/verisign/storm-graphite).
@@ -52,7 +52,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - To report to Graphite, put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
  argument:
-	- storm.reporter: "storm.jmx.reporter.GraphiteReporter"
+	- storm.reporter: "storm.jmx.reporter.GraphiteMetricReporter"
 	- storm.graphite.host: "HOST_IP"
 	- storm.graphite.port: PORT		//default = 2003
 ```	
@@ -101,7 +101,7 @@ argument for TCP reporter:
        nb_thread=>1
    }
 }
-
+filter{  #### SEE BELOW }
 output{
    elasticsearch{ hosts=>["HOST:PORT"]}
    stdout{codec=>rubydebug}
@@ -128,9 +128,9 @@ output{
    Worker:
  worker.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1%ID%  -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
    Supervisor
-supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
+supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=<any_open_port_number> -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
    Nimbus
- nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=any_open_port_number -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
+ nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=<any_open_port_number> -Djava.rmi.server.hostname=<IP_ADRESS/HOST_NAME>"
    ```
 
 - To send metrics to Logstash with Ganglia and Graphite input, just create pipeline in Logstash.
@@ -138,17 +138,17 @@ supervisor.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -
 ```
  input{
    ganlia{
-       host=>"HOST"
-       port=>PORT	//default 8649
+       host=>"HOST" #default localhost
+       port=>PORT	#default 8649
    }
    graphite{
-   	   host=>"HOST"
-   	   port=>PORT	//default 2003
+   	   host=>"HOST" #default localhost
+   	   port=>PORT	#default 2003
    }
 }
-
+filter{  #### SEE BELOW }
 output{
-   elasticsearch{ hosts=>["HOST:PORT"]}
+   elasticsearch{ hosts=>"HOST:PORT"}
    stdout{codec=>rubydebug}
 }
  ```
@@ -156,18 +156,41 @@ output{
 ```
 	input{
 	 tcp{
-	  host=>"IP_SERVER"
-	  port=>PORT		//default: 14445
+	  host=>"IP_SERVER" #default localhost
+	  port=>PORT		#default: 14445
 	  mode=>"server"
 	  ssl_verify=>false
 	 }
 	 udp{
- 	 host=>"HOST"
-      port=> PORT		//default: 14446
+ 	 host=>"HOST"       #default localhost
+      port=> PORT		#default: 14446
      }
    }
+   filter{  #### SEE BELOW }
 	output{
+	elasticsearch{ hosts=>"HOST:PORT"}
 	 stdout{codec=>rubydebug}
 	}
 ```
+* Filter for logstash
+  Structure of metric name: {NODE}.{TOPOLOGY}.{COMPONENT}.{METRIC.EXTRA_INFORMATION}
+  for example:
+  			localstorm.Local-Storm-Example.spout-example.transfer-count.metrics
+  			localstorm.Local-Storm-Example.bolt-example.emit-count.spout-example
+```
+filter{
+  if [type] == "storm"{
+  grok{
+  break_on_match=>false
+  patterns_dir=>"storm_patterns.conf"
+  match=>{"message" => ["Metric Name: %{METRICNAME:nodename}.%{METRICNAME:topologyname}.%	{METRICNAME:componentid}.%{USERNAME:metricname}", "Value: %{BASE10NUM:value}"]}
+ }
+}
+}
+```
 
+Custom metric to extract metric name in storm_patterns.conf
+
+``
+METRICNAME [a-zA-Z0-9_-]+
+``
