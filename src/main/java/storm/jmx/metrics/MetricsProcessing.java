@@ -60,7 +60,7 @@ public class MetricsProcessing {
 	{
 		if(name != null)
 		{
-			String str = (taskInfo.srcWorkerHost + "." + stormId + "." +
+			String str = (stormId + "." +
 					taskInfo.srcComponentId + "."
 				    + name).replaceAll("_", "")
 					.replaceAll(":", "")
