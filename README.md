@@ -172,13 +172,13 @@ output{
 	 stdout{codec=>rubydebug}
 	}
 ```
-* Structure of metric name: {NODE}.{TOPOLOGY}.{COMPONENT}.{METRIC.EXTRA_INFORMATION}
+* Structure of metric name: {TOPOLOGY}.{COMPONENT}.{METRIC.EXTRA_INFORMATION}
 
   for example:
   
-  			localstorm.Local-Storm-Example.spout-example.transfer-count.metrics
+  			Local-Storm-Example.spout-example.transfer-count.metrics
   			
-  			localstorm.Local-Storm-Example.bolt-example.emit-count.spout-example
+  			Local-Storm-Example.bolt-example.emit-count.spout-example
 * Filter for logstash if using UDP/TCP reporter
   
 ```
@@ -187,7 +187,7 @@ filter{
   grok{
   break_on_match=>false
   patterns_dir=>"storm_patterns.conf"
-  match=>{"message" => ["Metric Name: %{METRICNAME:nodename}.%{METRICNAME:topologyname}.%	{METRICNAME:componentid}.%{USERNAME:metricname}", "Value: %{BASE10NUM:value}"]}
+  match=>{"message" => ["Metric Name: %{METRICNAME:topologyname}.%{METRICNAME:componentid}.%{USERNAME:metricname}", "Value: %{BASE10NUM:value}"]}
  }
 }
 }
