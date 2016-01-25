@@ -11,8 +11,8 @@ public class LocalTopologyRunner {
 	public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException{
 		// TODO Auto-generated method stub
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("name-spout", new ExampleSpout(),2);
-		builder.setBolt("name-bolt", new ExampleBolt(),2).shuffleGrouping("name-spout");
+		builder.setSpout("name-spout", new ExampleSpout(),4);
+		builder.setBolt("name-bolt", new ExampleBolt(),8).setNumTasks(4).shuffleGrouping("name-spout");
 		
 		Config config = new Config();
 				
