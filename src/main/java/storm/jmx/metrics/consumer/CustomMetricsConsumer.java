@@ -35,19 +35,17 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 	
 	public void handleDataPoints(TaskInfo taskInfo, Collection<DataPoint> dataPoints) {
 		// TODO Auto-generated method stub
-		if(!taskInfo.srcComponentId.equalsIgnoreCase("__acker") && !taskInfo.srcComponentId.equalsIgnoreCase("__system")){
-			Map<String, Double> maps = Maps.newHashMap();
-			try {
-				maps = MetricsProcessing.processDataPoints(stormId, taskInfo, dataPoints);
-				if(maps.size() > 0)
-				{
-					for(Map.Entry<String, Double> entry : maps.entrySet())
-						reporter.sendMetrics(entry.getKey(), entry.getValue());
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				LOG.error(e.getMessage());
+		Map<String, Double> maps = Maps.newHashMap();
+		try {
+			maps = MetricsProcessing.processDataPoints(stormId, taskInfo, dataPoints);
+			if(maps.size() > 0)
+			{
+				for(Map.Entry<String, Double> entry : maps.entrySet())
+					reporter.sendMetrics(entry.getKey(), entry.getValue());
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error(e.getMessage());
 		}
 	}
 	private <T extends AbstractMetricReporter> T createInstance(Map config)
