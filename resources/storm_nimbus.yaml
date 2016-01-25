@@ -1,7 +1,7 @@
 storm.zookeeper.servers:
-    - "cluster-storm-nimbus"
+    - "storm-nimbus"
 
-nimbus.host: "cluster-storm-nimbus"
+nimbus.host: "storm-nimbus"
 topology.builtin.metrics.bucket.size.secs: 10
 topology.metrics.consumer.register:
     - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
