@@ -7,5 +7,5 @@ topology.metrics.consumer.register:
       parallelism.hint: 2
       argument:
          - storm.reporter: "storm.reporter.TCPMetricReporter"
-         - storm.tcp.ipaddress: "dmon"
+         - storm.tcp.ipaddress: "10.211.56.50"
          - storm.tcp.port: 14445
