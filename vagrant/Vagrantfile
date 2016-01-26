@@ -29,7 +29,7 @@ ln -sf apache-storm-0.9.6 storm
 
 
 #Fix owner
-chown -R vagrant.vagrant storm
+chown -R vagrant.vagrant storm apache*
 
 cat > /etc/hosts <<EOF
 127.0.0.1  vm-storm  vm-storm
@@ -44,7 +44,13 @@ EOF
 #Configuration file setup
 echo "Configuring storm"
 mv /home/vagrant/apache/conf/storm.yaml /home/vagrant/apache/conf/storm.backup
-cp /vagrant/storm.yaml /home/vagrant/storm/conf/storm.yaml
+cp /vagrant/supervisor.yaml /home/vagrant/storm/conf/storm.yaml
+
+#Copy metric consumer
+cp /vagrant/storm-metrics.jar /home/vagrant/storm/lib/storm-metrics.jar
+
+#Copy example
+cp /vagrant/storm-example.jar /home/vagrant
 
 #install zookeeper
 echo "Installing zookeeper"
@@ -52,7 +58,7 @@ apt-get -q -y --force-yes install zookeeper
 apt-get install zookeeperd -y
 
 echo "Starting zookeeper"
-service zookeeper start
+#service zookeeper start
 
 sudo cp /vagrant/storm.sh /etc/profile.d/storm.sh
 SCRIPT
