@@ -74,12 +74,14 @@ public class MetricsProcessing {
 			if(str.endsWith("default"))
 			{
 				str = str.substring(0, str.lastIndexOf("default"));
+				if(str.endsWith("."))
+					str = str.substring(0, str.lastIndexOf("."));
 			}
-			if(str.endsWith(".metrics"))
+			else if(str.endsWith(".metrics"))
 			{
 				str = str.substring(0, str.lastIndexOf(".metrics"));
 			}
-			str += "." + new DateTime(taskInfo.timestamp);
+			
 			return str;
 		}
 		return "";
