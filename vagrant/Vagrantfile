@@ -27,12 +27,11 @@ wget http://www.us.apache.org/dist/storm/apache-storm-0.9.6/apache-storm-0.9.6.t
 tar zxf apache-storm-0.9.6.tar.gz
 ln -sf apache-storm-0.9.6 storm
 
-
 #Fix owner
 chown -R vagrant.vagrant storm apache*
 
 cat > /etc/hosts <<EOF
-127.0.0.1  vm-storm  vm-storm
+127.0.0.1  storm-nimbus  storm-nimbus
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
@@ -43,24 +42,19 @@ EOF
 
 #Configuration file setup
 echo "Configuring storm"
-mv /home/vagrant/apache/conf/storm.yaml /home/vagrant/apache/conf/storm.backup
-cp /vagrant/supervisor.yaml /home/vagrant/storm/conf/storm.yaml
 
-#Copy metric consumer
-cp /vagrant/storm-metrics.jar /home/vagrant/storm/lib/storm-metrics.jar
+cd /home/vagrant
+mv storm/conf/storm.yaml storm/conf/storm.backup
 
-#Copy example
-cp /vagrant/storm-example.jar /home/vagrant
+git clone https://github.com/doandongnguyen/storm-logstash.git
+cp storm-logstash/target/storm-metrics-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm/lib/
+cp storm-logstash/vagrant/supervisor.yaml storm/conf/storm.yaml
 
 #install zookeeper
 echo "Installing zookeeper"
 apt-get -q -y --force-yes install zookeeper
 apt-get install zookeeperd -y
 
-echo "Starting zookeeper"
-#service zookeeper start
-
-sudo cp /vagrant/storm.sh /etc/profile.d/storm.sh
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
@@ -70,11 +64,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :master do |master|
     master.vm.provider :virtualbox do |v|
-      v.name = "vm-storm"
+      v.name = "storm-nimbus"
       v.customize ["modifyvm", :id, "--memory", "4096"]
     end
-    master.vm.network :private_network, ip: "10.211.55.100"
-    master.vm.hostname = "vm-storm"
+    master.vm.network :private_network, ip: "10.211.56.100"
+    master.vm.hostname = "storm-nimbus"
     master.vm.network :forwarded_port, host:8080, guest: 8080
     master.vm.provision :shell, :inline => $storm_script
   end
