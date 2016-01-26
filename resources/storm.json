@@ -1,9 +1,0 @@
-{
-  "host" : "localhost"
-  "port" : "16703"
-  "querries" :[
-    {
-      "object_name" : "storm.metrics.Gauge:name=*",
-      "attributes" : ["Value"]
-    } ]
-}
