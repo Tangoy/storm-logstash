@@ -53,7 +53,7 @@ public class CustomMetricsConsumer implements IMetricsConsumer {
 		try {
 			String className = config.containsKey(STORM_REPORTER)?
 					config.get(STORM_REPORTER).toString() :
-						"storm.jmx.reporter.JmxMetricReporter";
+						"storm.reporter.JmxMetricReporter";
 			T r = (T)Class.forName(className).newInstance();
 			r.setConfig(config);
 			return r;

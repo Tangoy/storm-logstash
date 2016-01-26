@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,7 @@ public class MetricsProcessing {
 			{
 				str = str.substring(0, str.lastIndexOf(".metrics"));
 			}
+			str += "." + new DateTime(taskInfo.timestamp);
 			return str;
 		}
 		return "";
