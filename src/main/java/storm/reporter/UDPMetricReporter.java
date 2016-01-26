@@ -1,32 +1,33 @@
-package storm.jmx.reporter;
+package storm.reporter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import storm.jmx.metrics.AbstractMetricReporter;
+import storm.metrics.AbstractMetricReporter;
 
-public class TCPMetricReporter extends AbstractMetricReporter {
-	public static final Logger LOG = LoggerFactory.getLogger(TCPMetricReporter.class);
-	
+public class UDPMetricReporter extends AbstractMetricReporter {
+	public static final Logger LOG = LoggerFactory.getLogger(UDPMetricReporter.class);
 	private String ipAddress;
 	private int port;
 	
-	private Socket socket;
+	private InetAddress address;
+	DatagramSocket socket;
 	@Override
 	protected void processConfig() {
 		// TODO Auto-generated method stub
-		ipAddress = config.containsKey(TCP_IP_ADDRESS)?
-				config.get(TCP_IP_ADDRESS).toString() :
+		ipAddress = config.containsKey(UDP_IP_ADDRESS)?
+				config.get(UDP_IP_ADDRESS).toString() :
 				"localhost";
-		port = config.containsKey(TCP_PORT) ?
-				Integer.parseInt(config.get(TCP_PORT).toString()) :
+		port = config.containsKey(UDP_PORT) ?
+				Integer.parseInt(config.get(UDP_PORT).toString()) :
 					14445;
 	}
 
@@ -38,13 +39,13 @@ public class TCPMetricReporter extends AbstractMetricReporter {
 	}
 
 	@Override
-	public void sendMetrics(String name, Double value){
+	public void sendMetrics(String name, Double value) {
 		// TODO Auto-generated method stub
-		PrintWriter out;
+		String str = "Name: " + name + " Value:" + value;
+		int length = str.getBytes().length;
+		DatagramPacket packet = new DatagramPacket(str.getBytes(), length, address, port);
 		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-			out.println("Metric Name: " + name + " Value: " + value.toString());
-			out.flush();
+			socket.send(packet);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
@@ -56,11 +57,12 @@ public class TCPMetricReporter extends AbstractMetricReporter {
 	public void start(){
 		// TODO Auto-generated method stub
 		try {
-			socket = new Socket(InetAddress.getByName(ipAddress), port);
+			address = InetAddress.getByName(ipAddress);
+			socket = new DatagramSocket();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
-		} catch (IOException e) {
+		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e.getMessage());
 		}
@@ -70,12 +72,7 @@ public class TCPMetricReporter extends AbstractMetricReporter {
 	@Override
 	public void stop(){
 		// TODO Auto-generated method stub
-		try {
-			socket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			LOG.error(e.getMessage());
-		}
+		socket.close();
 	}
 
 }

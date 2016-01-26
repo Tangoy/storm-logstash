@@ -1,4 +1,4 @@
-package storm.jmx.reporter;
+package storm.reporter;
 
 import java.io.IOException;
 import java.util.Map;
@@ -14,9 +14,9 @@ import info.ganglia.gmetric4j.gmetric.GMetric;
 import info.ganglia.gmetric4j.gmetric.GMetricType;
 import info.ganglia.gmetric4j.gmetric.GangliaException;
 import info.ganglia.gmetric4j.gmetric.GMetric.UDPAddressingMode;
+import storm.metrics.AbstractMetricReporter;
+import storm.metrics.GaugeMetric;
 import info.ganglia.gmetric4j.gmetric.GMetricSlope;
-import storm.jmx.metrics.AbstractMetricReporter;
-import storm.jmx.metrics.GaugeMetric;
 
 public class GangliaMetricReporter extends AbstractMetricReporter{
 	public static final Logger LOG = LoggerFactory.getLogger(GangliaMetricReporter.class);

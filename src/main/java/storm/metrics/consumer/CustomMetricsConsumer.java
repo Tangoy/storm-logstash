@@ -1,4 +1,4 @@
-package storm.jmx.metrics.consumer;
+package storm.metrics.consumer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import backtype.storm.metric.api.IMetricsConsumer;
 import backtype.storm.task.IErrorReporter;
 import backtype.storm.task.TopologyContext;
-import storm.jmx.metrics.AbstractMetricReporter;
-import storm.jmx.metrics.MetricsProcessing;
+import storm.metrics.AbstractMetricReporter;
+import storm.metrics.MetricsProcessing;
 
 
 public class CustomMetricsConsumer implements IMetricsConsumer {

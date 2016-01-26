@@ -1,4 +1,4 @@
-package storm.jmx.metrics;
+package storm.metrics;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class MetricsProcessing {
 		{
 			if(p.value == null)
 				continue;
-			else if(!MetricFiller.isFiller(p.name))
-				continue;
+			//else if(!MetricFiller.isFiller(p.name))
+			//	continue;
 			if(p.value instanceof Map){
 				try
 				{
@@ -58,15 +58,26 @@ public class MetricsProcessing {
 	}
 	private static String processingMetricPrefix(String stormId, String name, TaskInfo taskInfo)
 	{
+		
 		if(name != null)
 		{
-			String str = (stormId + "." +
-					taskInfo.srcComponentId + "."
-				    + name).replaceAll("_", "")
-					.replaceAll(":", "")
-					.replaceAll(".default", "")
-					.toString();
+			String str = taskInfo.srcWorkerHost + ":"
+							+ taskInfo.srcWorkerPort + "."
+							+ stormId + "." 
+							+ taskInfo.srcComponentId.replaceAll("__", "") + "."
+							+ taskInfo.srcTaskId + ".";
 			
+		    str += name.replaceAll("_", "")
+					.replaceAll(":", "")
+					.toString();
+			if(str.endsWith("default"))
+			{
+				str = str.substring(0, str.lastIndexOf("default"));
+			}
+			if(str.endsWith(".metrics"))
+			{
+				str = str.substring(0, str.lastIndexOf(".metrics"));
+			}
 			return str;
 		}
 		return "";

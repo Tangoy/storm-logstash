@@ -7,24 +7,27 @@ The idea came up with an open source project named storm-graphite (https://githu
 This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed IMetricsConsumer of Storm.
 
 ##Usage
-- Setup on local mode (I just test on this)
+- Testing on cluster mode
+- First, Copy jar file: *storm-metrics-0.0.1-SNAPSHOT-jar-with-dependencies.jar* to $STORM_HOME/lib.
+- Then Enable Metrics Consumer <SEE BELOW>
 
 ###Enable Metrics Consumer
 - Add lines in *$STORM_HOME/conf/storm.yaml* file:
 ```
   topology.metrics.consumer.register:
-    - class: "storm.jmx.metrics.consumer.CustomMetricsConsumer"
+    - class: "storm.metrics.consumer.CustomMetricsConsumer"
   ```
   Or when defining topology, add this line:
   ```
   	Config conf = new Config();
-  	conf.registrerMetricsConsumer(CustomMetricsConsumer.class);
+  	conf.registrerMetricsConsumer(storm.metrics.consumer.CustomMetricsConsumer.class);
   ```
+  
 ### JMX reporter
 - To report to Jmx, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```  
    argument:
-    - storm.reporter: "storm.jmx.reporter.JmxMetricReporter"
+    - storm.reporter: "storm.reporter.JmxMetricReporter"
     - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
 ```
 ```
@@ -36,13 +39,13 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - To report to Ganglia, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology
 ```
    argument:
-    - storm.reporter: "storm.jmx.reporter.GangliaMetricReporter"
+    - storm.reporter: "storm.reporter.GangliaMetricReporter"
     - storm.ganglia.host: "HOST_IP"
     - storm.ganglia.port: PORT 		//default = 8649
     - storm.ganglia.group: "GANGLIA_GROUP"
 ```
 ```
-	conf.add("storm.reporter","storm.jmx.reporter.GangliaMetricReporter");
+	conf.add("storm.reporter","storm.reporter.GangliaMetricReporter");
 	conf.add("storm.ganglia.host", "HOST_IP");
 	conf.add("storm.ganglia.port", PORT);
 	conf.add("storm.ganglia.group", "GANGLIA_GROUP");
@@ -52,12 +55,12 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - To report to Graphite, put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```
  argument:
-	- storm.reporter: "storm.jmx.reporter.GraphiteMetricReporter"
+	- storm.reporter: "storm.reporter.GraphiteMetricReporter"
 	- storm.graphite.host: "HOST_IP"
 	- storm.graphite.port: PORT		//default = 2003
 ```	
 ```
-	conf.add("storm.reporter","storm.jmx.reporter.GraphiteReporter");
+	conf.add("storm.reporter","storm.reporter.GraphiteReporter");
 	conf.add("storm.graphite.host", "HOST_IP");
 	conf.add("storm.graphite.port", PORT);
 ```
@@ -67,23 +70,23 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 
  ```
  argument for UDP reporter:
-	- storm.reporter: "storm.jmx.reporter.UDPMetricReporter"
+	- storm.reporter: "storm.reporter.UDPMetricReporter"
 	- storm.udp.host: "HOST_IP"
 	- storm.udp.port: PORT		//default = 1446
 ```	
 ```
-	conf.add("storm.reporter","storm.jmx.reporter.UDPMetricReporter");
+	conf.add("storm.reporter","storm.reporter.UDPMetricReporter");
 	conf.add("storm.udp.ipaddress", "HOST_IP");
 	conf.add("storm.udp.port", PORT);
 ```
 ```
 argument for TCP reporter:
-	- storm.reporter: "storm.jmx.reporter.TCPMetricReporter"
+	- storm.reporter: "storm.reporter.TCPMetricReporter"
 	- storm.tcp.host: "HOST_IP"
 	- storm.tcp.port: PORT		//default = 1445
 ```
  ```
-	conf.add("storm.reporter","storm.jmx.reporter.TCPMetricReporter");
+	conf.add("storm.reporter","storm.reporter.TCPMetricReporter");
 	conf.add("storm.tcp.ipaddress", "HOST_IP");
 	conf.add("storm.tcp.port", PORT);
 ```
@@ -172,29 +175,29 @@ output{
 	 stdout{codec=>rubydebug}
 	}
 ```
-* Structure of metric name: {TOPOLOGY}.{COMPONENT}.{METRIC.EXTRA_INFORMATION}
+* Structure of metric name: {HOST}:{PORT}.{TOPOLOGY}.{COMPONENT}.{TASKID}.{METRIC.EXTRA_INFORMATION}
 
   for example:
   
-  			Local-Storm-Example.spout-example.transfer-count.metrics
+  			Storm-cluster:6700.Local-Storm-Example.spout-example.5.transfer-count.metrics
   			
-  			Local-Storm-Example.bolt-example.emit-count.spout-example
 * Filter for logstash if using UDP/TCP reporter
   
 ```
 filter{
-  if [type] == "storm"{
-  grok{
+ grok{
   break_on_match=>false
-  patterns_dir=>"storm_patterns.conf"
-  match=>{"message" => ["Metric Name: %{METRICNAME:topologyname}.%{METRICNAME:componentid}.%{USERNAME:metricname}", "Value: %{BASE10NUM:value}"]}
+  patterns_dir=>"patterns.conf"
+  match=>{"message" => "Name: %{HOSTNAME:host}:%{INT:port}.%{COMPONENTNAME:topologyname}.%{COMPONENTNAME:componentid}.%{INT:taskid}.%{METRICNAME:metricname} Value: %{NUMBER:value}"}
+  remove_field=>["message"]
+  overwrite=>["host","port"]
  }
-}
 }
 ```
 
 Custom metric to extract metric name in storm_patterns.conf
 
 ``
-METRICNAME [a-zA-Z0-9_-]+
+COMPONENTNAME [a-zA-Z0-9_-]+
+METRICNAME [a-zA-Z0-9/._-]+
 ``

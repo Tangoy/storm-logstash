@@ -1,4 +1,4 @@
-package storm.jmx.reporter;
+package storm.reporter;
 
 import java.lang.management.ManagementFactory;
 
@@ -11,8 +11,8 @@ import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ObjectNameFactory;
 
-import storm.jmx.metrics.AbstractMetricReporter;
-import storm.jmx.metrics.GaugeMetric;
+import storm.metrics.AbstractMetricReporter;
+import storm.metrics.GaugeMetric;
 
 public class JmxMetricReporter extends AbstractMetricReporter{
 	private final MetricRegistry METRIC_REGISTRY = new MetricRegistry();

@@ -1,4 +1,4 @@
-package storm.jmx.metrics;
+package storm.metrics;
 
 import com.codahale.metrics.Gauge;
 

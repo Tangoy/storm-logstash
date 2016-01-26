@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>storm-jmx-metrics</name>
+	<name>storm-logstash</name>
 	<comment></comment>
 	<projects>
 	</projects>

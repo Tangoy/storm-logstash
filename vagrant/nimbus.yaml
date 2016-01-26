@@ -1,0 +1,11 @@
+storm.zookeeper.servers:
+    - "storm-nimbus"
+storm.zookeeper.port: 2181
+topology.builtin.metrics.bucket.size.secs: 10
+topology.metrics.consumer.register:
+    - class: "storm.metrics.consumer.CustomMetricsConsumer"
+      parallelism.hint: 2
+      argument:
+         - storm.reporter: "storm.reporter.TCPMetricReporter"
+         - storm.tcp.ipaddress: "dmon"
+         - storm.tcp.port: 14445

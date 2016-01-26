@@ -1,4 +1,4 @@
-package storm.jmx.reporter;
+package storm.reporter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.graphite.Graphite;
 
-import storm.jmx.metrics.AbstractMetricReporter;
+import storm.metrics.AbstractMetricReporter;
 
 
 public class GraphiteMetricReporter extends AbstractMetricReporter {
