@@ -1,0 +1,45 @@
+This is called system_consumer_bolt.
+It has id = -1;
+It run on a worker of storm cluster (not applied to local mode)
+This bolt get metrics from JVM and emit to metrics consumer
+
+receive.readpos
+receive.writepos
+receive.capacity 
+receive.population
+
+sendqueue.population
+sendqueue.writepos
+sendqueue.capacity
+sendqueue.readpos
+
+transfer.readpos
+transfer.writepos
+transfer.capacity
+transfer.population
+
+emit-count 			<default>
+transfer-count		<default>
+
+startTimeSecs 
+uptimeSecs
+newWorkerEvent
+
+GC/MarkSweepCompact.count
+GC/MarkSweepCompact.timeMs
+GC/Copy.count
+GC/Copy.timeMs
+
+memory/nonHeap.committedBytes
+memory/nonHeap.unusedBytes
+memory/nonHeap.initBytes
+memory/nonHeap.virtualFreeBytes
+memory/nonHeap.usedBytes
+memory/nonHeap.maxBytes
+
+memory/heap.usedBytes
+memory/heap.maxBytes
+memory/heap.committedBytes
+memory/heap.virtualFreeBytes
+memory/heap.initBytes
+memory/heap.unusedBytes

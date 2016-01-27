@@ -1,0 +1,12 @@
+receive.readpos
+receive.writepos
+receive.capacity 
+receive.population
+
+sendqueue.population
+sendqueue.writepos
+sendqueue.capacity
+sendqueue.readpos
+
+transfer-count			<default>
+emit-count				<default>

@@ -1,0 +1,19 @@
+receive.readpos
+receive.writepos
+receive.capacity 
+receive.population
+
+sendqueue.population
+sendqueue.writepos
+sendqueue.capacity
+sendqueue.readpos
+	
+emit-count				<default>
+transfer-count			<default>
+
+#some more metrics will have on bolt
+
+execute-count.<from bolt/spout>
+ack-count.<from bolt/spout>
+process-latency.<from bolt/spout>
+execute-latency.<from bolt/spout>

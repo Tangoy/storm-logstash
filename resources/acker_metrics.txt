@@ -1,0 +1,14 @@
+This is not applied to Base bolts because of not having ack 
+
+receive.readpos
+receive.writepos
+receive.capacity 
+receive.population
+
+sendqueue.population
+sendqueue.writepos
+sendqueue.capacity
+sendqueue.readpos
+
+transfer-count  <default>
+emit-count      <default>
