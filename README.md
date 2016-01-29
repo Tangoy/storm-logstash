@@ -31,7 +31,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
     - storm.jmx.domain: "MBEAN_DOMAIN_NAME"
 ```
 ```
-	conf.add("storm.reporter","storm.jmx.reporter.JmxMetricReporter");
+	conf.add("storm.reporter","storm.reporter.JmxMetricReporter");
 	conf.add("storm.jmx.domain", "MBEAN_DOMAIN_NAME");
 ```
 

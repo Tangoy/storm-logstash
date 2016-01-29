@@ -1,6 +1,6 @@
 /home/doandong/git/storm-logstash/src/main/java/storm/metrics/GaugeMetric.java
-/home/doandong/git/storm-logstash/src/main/java/storm/metrics/MetricFiller.java
 /home/doandong/git/storm-logstash/src/main/java/storm/reporter/GangliaMetricReporter.java
+/home/doandong/git/storm-logstash/src/main/java/storm/metrics/MetricFilter.java
 /home/doandong/git/storm-logstash/src/main/java/storm/metrics/consumer/CustomMetricsConsumer.java
 /home/doandong/git/storm-logstash/src/main/java/storm/reporter/TCPMetricReporter.java
 /home/doandong/git/storm-logstash/src/main/java/storm/metrics/MetricsProcessing.java
