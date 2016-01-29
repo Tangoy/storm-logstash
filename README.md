@@ -11,7 +11,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 - First, Copy jar file: *storm-metrics-0.0.1-SNAPSHOT-jar-with-dependencies.jar* to $STORM_HOME/lib.
 - Then Enable Metrics Consumer <SEE BELOW>
 
-###Enable Metrics Consumer
+##Enable Metrics Consumer
 - Add lines in *$STORM_HOME/conf/storm.yaml* file:
 ```
   topology.metrics.consumer.register:
@@ -22,7 +22,9 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
   	Config conf = new Config();
   	conf.registrerMetricsConsumer(storm.metrics.consumer.CustomMetricsConsumer.class);
   ```
-  
+
+##Reporter Options:
+
 ### JMX reporter
 - To report to Jmx, just put parameters in *$STORM_HOME/conf/storm.yaml* or *Config* in topology:
 ```  
@@ -65,7 +67,7 @@ This project used Coda Hale metrics (http://metrics.dropwizard.io) and deployed 
 	conf.add("storm.graphite.port", PORT);
 ```
 
-### TCP/UDP configuration 
+### TCP/UDP reporter 
  - With TCP/UDP reporter
 
  ```
@@ -91,7 +93,7 @@ argument for TCP reporter:
 	conf.add("storm.tcp.port", PORT);
 ```
 
-### Logstash Configuration
+## Logstash Configuration
 - Send metrics to Logstash with *Jmx input*.
    - First, install **logstash-input-jmx** in logstash
    - Create pipeline: Example
