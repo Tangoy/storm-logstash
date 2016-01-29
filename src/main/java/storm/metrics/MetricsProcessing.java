@@ -20,7 +20,7 @@ public class MetricsProcessing {
 		Map<String, Double> maps = new HashMap<String, Double>();
 		for(DataPoint p : dataPoints)
 		{
-			if(p.value == null)
+			if(p.value == null || taskInfo.srcComponentId.equalsIgnoreCase("__acker"))
 				continue;
 			if(p.value instanceof Map){
 				try
@@ -28,7 +28,8 @@ public class MetricsProcessing {
 					Map<String, Object> map = (Map<String, Object>) p.value;
 					for(Map.Entry<String, Object> entry : map.entrySet())
 					{
-						Double value = Double.valueOf(entry.getValue().toString());
+						Double value = ((Number)entry.getValue()).doubleValue(); 
+						//Double.valueOf(entry.getValue().toString());
 						if(value != null)
 						{
 							StringBuffer name = new StringBuffer(p.name).append(".")

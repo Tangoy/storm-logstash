@@ -30,6 +30,7 @@ public class MetricFilter {
 			filter = true;
 		else if(name.endsWith("capacity"))
 			filter = true;
+		
 		return filter;
 	}
 }
