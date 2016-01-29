@@ -25,8 +25,11 @@ public class MetricFilter {
 			return true;
 		else
 			return false;*/
-		if(name.contains("_metrics"))
-			return true;
-		return false;
+		Boolean filter = false;
+		if(name.endsWith("metrics") || name.endsWith("_system"))
+			filter = true;
+		else if(name.endsWith("capacity"))
+			filter = true;
+		return filter;
 	}
 }
