@@ -5,7 +5,7 @@ nimbus.host: "storm-nimbus"
 topology.builtin.metrics.bucket.size.secs: 10
 topology.metrics.consumer.register:
     - class: "storm.metrics.consumer.CustomMetricsConsumer"
-      parallelism.hint: 2
+      parallelism.hint: 1
       argument:
           storm.reporter: "storm.reporter.TCPMetricReporter"
           storm.tcp.ipaddress: "10.211.56.50"

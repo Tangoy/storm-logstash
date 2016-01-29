@@ -22,8 +22,6 @@ public class MetricsProcessing {
 		{
 			if(p.value == null)
 				continue;
-			/*else if(!MetricFilter.isFiller(p.name))
-				continue;*/
 			if(p.value instanceof Map){
 				try
 				{
@@ -69,18 +67,7 @@ public class MetricsProcessing {
 					.append(stormId).append(".")
 					.append(taskInfo.srcComponentId.replaceAll("__", "")).append(".")
 					.append(taskInfo.srcTaskId).append(".")
-					.append(name.replaceAll("__", ""));
-			
-			/*if(strBuff.toString().endsWith("default"))
-			{
-				if(strBuff.toString().endsWith(".default"))
-					strBuff.replace(strBuff.lastIndexOf(".default"), strBuff.length(), "");
-				else
-					strBuff.replace(strBuff.lastIndexOf("default"), strBuff.length(), "");
-			}
-			else if(strBuff.toString().endsWith(".metrics"))
-				strBuff.replace(strBuff.lastIndexOf(".metrics"), strBuff.length(), "");*/
-				
+					.append(name.replaceAll("__", ""));				
 			return strBuff.toString();
 		}
 		return "";
