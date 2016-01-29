@@ -41,7 +41,7 @@ public class UDPMetricReporter extends AbstractMetricReporter {
 	@Override
 	public void sendMetrics(String name, Double value) {
 		// TODO Auto-generated method stub
-		String str = "Name: " + name + " Value:" + value;
+		String str = "Name: " + name + " Value:" + String.format("%-12.2f", value);
 		int length = str.getBytes().length;
 		DatagramPacket packet = new DatagramPacket(str.getBytes(), length, address, port);
 		try {

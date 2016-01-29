@@ -22,8 +22,8 @@ public class MetricsProcessing {
 		{
 			if(p.value == null)
 				continue;
-			//else if(!MetricFiller.isFiller(p.name))
-			//	continue;
+			/*else if(!MetricFilter.isFiller(p.name))
+				continue;*/
 			if(p.value instanceof Map){
 				try
 				{
@@ -35,7 +35,8 @@ public class MetricsProcessing {
 						{
 							StringBuffer name = new StringBuffer(p.name).append(".")
 									.append(entry.getKey().toString());
-							maps.put(processingMetricPrefix(stormId, name.toString(), taskInfo), value);
+							if(!MetricFilter.isFilter(name.toString()))
+								maps.put(processingMetricPrefix(stormId, name.toString(), taskInfo), value);
 						}
 					}
 				}catch(Exception e)
@@ -62,27 +63,25 @@ public class MetricsProcessing {
 		
 		if(name != null)
 		{
-			String str = taskInfo.srcWorkerHost + ":"
-							+ taskInfo.srcWorkerPort + "."
-							+ stormId + "." 
-							+ taskInfo.srcComponentId.replaceAll("__", "") + "."
-							+ taskInfo.srcTaskId + ".";
+			StringBuffer strBuff = new StringBuffer("");
+			strBuff.append(taskInfo.srcWorkerHost).append(":")
+					.append(taskInfo.srcWorkerPort).append(".")
+					.append(stormId).append(".")
+					.append(taskInfo.srcComponentId.replaceAll("__", "")).append(".")
+					.append(taskInfo.srcTaskId).append(".")
+					.append(name.replaceAll("__", ""));
 			
-		    str += name.replaceAll("_", "")
-					.replaceAll(":", "")
-					.toString();
-			if(str.endsWith("default"))
+			/*if(strBuff.toString().endsWith("default"))
 			{
-				str = str.substring(0, str.lastIndexOf("default"));
-				if(str.endsWith("."))
-					str = str.substring(0, str.lastIndexOf("."));
+				if(strBuff.toString().endsWith(".default"))
+					strBuff.replace(strBuff.lastIndexOf(".default"), strBuff.length(), "");
+				else
+					strBuff.replace(strBuff.lastIndexOf("default"), strBuff.length(), "");
 			}
-			else if(str.endsWith(".metrics"))
-			{
-				str = str.substring(0, str.lastIndexOf(".metrics"));
-			}
-			
-			return str;
+			else if(strBuff.toString().endsWith(".metrics"))
+				strBuff.replace(strBuff.lastIndexOf(".metrics"), strBuff.length(), "");*/
+				
+			return strBuff.toString();
 		}
 		return "";
 	}

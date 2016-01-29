@@ -43,7 +43,7 @@ public class TCPMetricReporter extends AbstractMetricReporter {
 		PrintWriter out;
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
-			out.println("Name: " + name + " Value: " + value);
+			out.println("Name: " + name + " Value: " + String.format("%-12.2f", value));
 			out.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
