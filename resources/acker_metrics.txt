@@ -1,14 +1,12 @@
-This is not applied to Base bolts because of not having ack 
-
-receive.readpos
-receive.writepos
+receive.read_pos
+receive.write_pos
 receive.capacity 
 receive.population
 
 sendqueue.population
-sendqueue.writepos
+sendqueue.write_pos
 sendqueue.capacity
-sendqueue.readpos
+sendqueue.read_pos
 
-transfer-count  <default>
-emit-count      <default>
+transfer-count  <default stream>
+emit-count      <default stream>

@@ -3,18 +3,18 @@ It has id = -1;
 It run on a worker of storm cluster (not applied to local mode)
 This bolt get metrics from JVM and emit to metrics consumer
 
-receive.readpos
-receive.writepos
+receive.read_pos
+receive.write_pos
 receive.capacity 
 receive.population
 
 sendqueue.population
-sendqueue.writepos
+sendqueue.write_pos
 sendqueue.capacity
-sendqueue.readpos
+sendqueue.read_pos
 
-transfer.readpos
-transfer.writepos
+transfer.read_pos
+transfer.write_pos
 transfer.capacity
 transfer.population
 

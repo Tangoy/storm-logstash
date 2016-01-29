@@ -1,19 +1,19 @@
-receive.readpos
-receive.writepos
+receive.read_pos
+receive.write_pos
 receive.capacity 
 receive.population
 
 sendqueue.population
-sendqueue.writepos
+sendqueue.write_pos
 sendqueue.capacity
-sendqueue.readpos
+sendqueue.read_pos
 	
-emit-count				<default>
-transfer-count			<default>
+emit-count				<default stream>
+transfer-count			<default stream>
 
 #some more metrics will have on bolt
 
-execute-count.<from bolt/spout>
-ack-count.<from bolt/spout>
-process-latency.<from bolt/spout>
-execute-latency.<from bolt/spout>
+execute-count.<from bolt/spout stream>
+ack-count.<from bolt/spout stream>
+process-latency.<from bolt/spout stream>
+execute-latency.<from bolt/spout stream>
