@@ -9,3 +9,4 @@ topology.metrics.consumer.register:
           storm.reporter: "storm.reporter.TCPMetricReporter"
           storm.tcp.ipaddress: "10.211.56.50"
           storm.tcp.port: 14445
+nimbus.childopts: " -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=12345"
