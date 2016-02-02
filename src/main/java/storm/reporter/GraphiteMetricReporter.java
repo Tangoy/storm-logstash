@@ -34,7 +34,7 @@ public class GraphiteMetricReporter extends AbstractMetricReporter {
 		try {
 			if(!graphite.isConnected())
 				graphite.connect();
-			graphite.send(name, String.format("%8.2f", value), System.currentTimeMillis());
+			graphite.send(name, String.format("%12.3f", value), System.currentTimeMillis());
 			graphite.flush();
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block

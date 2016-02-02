@@ -28,8 +28,6 @@ public class MetricFilter {
 		Boolean filter = false;
 		if(name.endsWith("metrics") || name.endsWith("_system"))
 			filter = true;
-		else if(name.endsWith("capacity"))
-			filter = true;
 		
 		return filter;
 	}
