@@ -67,8 +67,15 @@ public class MetricsProcessing {
 					.append(taskInfo.srcWorkerPort).append(".")
 					.append(stormId).append(".")
 					.append(taskInfo.srcComponentId.replaceAll("__", "")).append(".")
-					.append(taskInfo.srcTaskId).append(".")
-					.append(name.replaceAll("__", ""));				
+					.append(taskInfo.srcTaskId).append(".");
+			if(name.endsWith(":default"))
+			{
+				name = name.substring(0, name.lastIndexOf(":default"));
+				
+			}
+			else if(name.endsWith(".default"))
+				name = name.substring(0, name.lastIndexOf(":default"));
+			strBuff.append(name.replaceAll("__", ""));
 			return strBuff.toString();
 		}
 		return "";
