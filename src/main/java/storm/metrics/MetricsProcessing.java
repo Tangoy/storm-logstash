@@ -70,11 +70,11 @@ public class MetricsProcessing {
 					.append(taskInfo.srcTaskId).append(".");
 			if(name.endsWith(":default"))
 			{
-				name = name.substring(0, name.lastIndexOf(":default"));
+				name = name.replace(":default", "");
 				
 			}
 			else if(name.endsWith(".default"))
-				name = name.substring(0, name.lastIndexOf(":default"));
+				name = name.replace(".default", "");
 			strBuff.append(name.replaceAll("__", ""));
 			return strBuff.toString();
 		}
